@@ -1,0 +1,11 @@
+ruta_id,origen,destino,nombre_origen,depto_origen,nombre_destino,depto_destino,corredor,sentido,ruta_regreso,nombre
+50001-11001,50001,11001,Villavicencio,Meta,"Bogotá, D.C.","Bogotá, D.C.",1,ida,11001-50001,Villavicencio → Bogotá
+11001-50001,11001,50001,"Bogotá, D.C.","Bogotá, D.C.",Villavicencio,Meta,1,regreso,50001-11001,Bogotá → Villavicencio
+25307-11001,25307,11001,Girardot,Cundinamarca,"Bogotá, D.C.","Bogotá, D.C.",2,ida,11001-25307,Girardot → Bogotá
+11001-25307,11001,25307,"Bogotá, D.C.","Bogotá, D.C.",Girardot,Cundinamarca,2,regreso,25307-11001,Bogotá → Girardot
+66001-63001,66001,63001,Pereira,Risaralda,Armenia,Quindío,3,ida,63001-66001,Pereira → Armenia
+63001-66001,63001,66001,Armenia,Quindío,Pereira,Risaralda,3,regreso,66001-63001,Armenia → Pereira
+52001-52356,52001,52356,Pasto,Nariño,Ipiales,Nariño,4,ida,52356-52001,Pasto → Ipiales
+52356-52001,52356,52001,Ipiales,Nariño,Pasto,Nariño,4,regreso,52001-52356,Ipiales → Pasto
+15238-15759,15238,15759,Duitama,Boyacá,Sogamoso,Boyacá,5,ida,15759-15238,Duitama → Sogamoso
+15759-15238,15759,15238,Sogamoso,Boyacá,Duitama,Boyacá,5,regreso,15238-15759,Sogamoso → Duitama
