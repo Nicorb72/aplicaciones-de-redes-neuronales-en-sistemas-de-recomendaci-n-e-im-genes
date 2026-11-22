@@ -1,0 +1,6 @@
+corredor,ruta_ida,ruta_regreso,correlacion_semanal,razon_regreso_ida
+Villavicencio → Bogotá,50001-11001,11001-50001,0.809,0.427
+Girardot → Bogotá,25307-11001,11001-25307,0.542,0.608
+Pereira → Armenia,66001-63001,63001-66001,0.867,0.525
+Pasto → Ipiales,52001-52356,52356-52001,0.95,0.98
+Duitama → Sogamoso,15238-15759,15759-15238,0.786,0.726

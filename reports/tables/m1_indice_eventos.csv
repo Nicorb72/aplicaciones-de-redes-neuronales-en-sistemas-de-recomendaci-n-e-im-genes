@@ -1,0 +1,11 @@
+nombre,Víspera de puente,Primer día de puente,Último día de puente,Festivo (no último),Día después de puente,Elecciones
+Bogotá → Girardot,1.685,3.03,1.045,1.312,1.337,0.749
+Bogotá → Villavicencio,1.647,1.893,1.114,0.791,1.346,0.671
+Duitama → Sogamoso,1.069,0.957,0.692,0.477,1.027,0.866
+Sogamoso → Duitama,1.052,1.034,0.815,0.544,1.13,0.838
+Girardot → Bogotá,1.129,1.147,2.522,0.858,1.791,0.634
+Villavicencio → Bogotá,1.168,1.114,1.761,0.779,1.42,0.44
+Pasto → Ipiales,1.079,1.111,0.862,0.809,1.102,0.501
+Ipiales → Pasto,1.027,1.067,0.982,0.701,1.204,0.589
+Armenia → Pereira,1.125,1.216,1.349,0.963,1.256,0.748
+Pereira → Armenia,1.09,1.212,1.138,0.908,1.175,0.726

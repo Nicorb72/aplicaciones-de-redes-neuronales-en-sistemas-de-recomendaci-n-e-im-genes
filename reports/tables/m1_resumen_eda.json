@@ -1,0 +1,14 @@
+{
+  "registros_totales": 49202812,
+  "variables": 10,
+  "fecha_min_registrada": "2019",
+  "fecha_max_registrada": "6202",
+  "varianza_descomposicion_pct": {
+    "semanal": 6.0,
+    "anual": 26.0,
+    "tendencia": 29.8,
+    "residuo": 38.2
+  },
+  "nivel_2022_vs_2023_mediana": 0.964,
+  "nivel_2025_vs_2023_mediana": 0.948
+}

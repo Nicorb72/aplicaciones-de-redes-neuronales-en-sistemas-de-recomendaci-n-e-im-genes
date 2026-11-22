@@ -1,0 +1,11 @@
+id,hipotesis,n_dias_ruta,indice_mediano,rutas_en_direccion_esperada,estadistico,p_valor,veredicto
+H1,"El día de la semana determina la demanda, con patrón según el sentido: salidas de ciudad grande pican viernes, regresos domingo/lunes, rutas pendulares caen el fin de semana",11000.0,1.361,10,,5.31e-13,Confirmada
+H2a,La víspera de un puente festivo aumenta la demanda,457.0,1.12,10,84375.0,2.52e-31,Confirmada
+H2b,El último día de un puente (retorno) aumenta la demanda,462.0,1.073,6,71250.0,3.01e-10,Confirmada
+H2c,Los festivos que no son día de retorno reducen la demanda,275.0,0.822,9,7909.0,2.58e-17,Confirmada
+H3,La Semana Santa aumenta la demanda,327.0,1.162,8,39919.0,9.32e-15,Confirmada
+H4,La temporada de fin de año (15-dic a 12-ene) aumenta la demanda,880.0,1.181,10,336187.0,1.61e-80,Confirmada
+H5a,Las vacaciones escolares de mitad de año aumentan la demanda,788.0,1.076,8,231546.0,6.96e-34,Confirmada
+H5b,El receso escolar de octubre aumenta la demanda,280.0,1.159,10,36762.0,1.01e-36,Confirmada
+H7,Las jornadas electorales reducen la demanda,50.0,0.678,10,12.0,6.22e-14,Confirmada
+H6,Recuperación pospandemia: la demanda crece de 2021 a 2023 y se estabiliza,,0.635,10,,9.77e-04,Confirmada

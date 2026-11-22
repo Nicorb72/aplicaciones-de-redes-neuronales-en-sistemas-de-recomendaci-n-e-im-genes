@@ -1,0 +1,11 @@
+variable,tipo_publicado,descripcion_diccionario
+terminal,text,Corresponde a la sede de la terminal desde donde se realizan y reportan los despachos
+clase_vehiculo,text,Identificador numérico dado por el RUNT
+nivel_servicio,text,1 BASICO - CORRIENTE 2 LUJO 3 CORRIENTE DIRECTO
+municipio_origen_ruta,text,Código Divipola del municipio de origen de la ruta
+municipio_destino_ruta,text,Código Divipola del departamento de destino de la ruta
+fecha_despacho,calendar_date,Fecha de realización del despacho. date (DD/MM/YYYY)
+hora_despacho,text,Hora 24H (hh)
+tipo_despacho,text,"1 = Si el despacho de la ruta es en origen, y 2 = Si el despacho de la ruta es en transito"
+despachos,number,Número vehículos de transporte de pasajeros por carretera que salen desde la terminal
+pasajeros,number,Número de pasajeros que abordaron viaje desde la terminal de transporte. Las terminales en tránsito sólo deben reportar los pasajeros que abordaron el vehículo en dicha terminal.
