@@ -1,0 +1,2 @@
+# Dependencias fijadas a versiones específicas (pendiente de completar).
+# Ejemplo de formato: paquete==0.0.0

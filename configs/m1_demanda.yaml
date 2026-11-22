@@ -1,0 +1,16 @@
+# ventana:
+# capas:
+# unidades:
+# regularización:
+# optimizador:
+# lr:
+# cuantil:
+# epochs:
+window:
+layers:
+units:
+regularization:
+optimizer:
+lr:
+quantile:
+epochs:
