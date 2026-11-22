@@ -1,0 +1,114 @@
+# =============================================================================
+# Módulo 1 — Datos y análisis descriptivo (Persona 1)
+# Todos los parámetros de descarga, limpieza, construcción de series,
+# particiones y EDA. Se puede cambiar cualquier valor sin tocar el código:
+#   python -m m1_demanda.data.build_series --config configs/m1_datos.yaml
+# =============================================================================
+
+fuente:
+  # Superintendencia de Transporte (2026). Operación de pasajeros y despacho de
+  # vehículos en la modalidad de transporte de pasajeros por carretera [Conjunto de datos].
+  # datos.gov.co. https://www.datos.gov.co/d/eh75-8ah6
+  dataset_id: eh75-8ah6
+  base_url: https://www.datos.gov.co
+  # DANE (2025). DIVIPOLA - Códigos municipios (corte 30-dic-2024) [Conjunto de datos].
+  # datos.gov.co. https://www.datos.gov.co/d/gdxc-w37w
+  divipola_id: gdxc-w37w
+  fecha_inicio: "2021-01-01"   # la ficha del dataset indica "datos disponibles desde 1 de enero de 2021"
+  fecha_fin: "2026-04-30"      # último mes publicado al momento de la descarga (2026-11-21)
+  timeout_s: 600
+  page_size: 50000
+
+seleccion_rutas:
+  # Rutas candidatas que se descargan a nivel día x clase de vehículo:
+  # las N con más pasajeros en origen + su sentido de regreso.
+  n_candidatas: 40
+  # Corredores analizados (ida y regreso = 2 series cada uno). Se eligieron
+  # tras revisar a las candidatas (ver docs/m1_datos_y_eda.md, sección 3):
+  # volumen alto, cobertura completa en los periodos válidos, ambos sentidos
+  # reportados y diversidad de distancia/tipo de viaje.
+  corredores:
+    - ["50001", "11001"]   # Villavicencio – Bogotá: larga distancia, turismo de puente
+    - ["25307", "11001"]   # Girardot – Bogotá: turismo de fin de semana (clima cálido)
+    - ["66001", "63001"]   # Pereira – Armenia: interurbano corto (Eje Cafetero)
+    - ["52001", "52356"]   # Pasto – Ipiales: corredor fronterizo (Nariño)
+    - ["15238", "15759"]   # Duitama – Sogamoso: pendular intradepartamental (Boyacá)
+  # Medellín–Rionegro (05001-05615) es la ruta de más pasajeros, pero se descartó
+  # porque el sentido de regreso (05615-05001) no aparece reportado.
+
+limpieza:
+  tipo_despacho_objetivo: ORIGEN     # pasajeros que abordan en la terminal de origen
+  # Un día se considera de "reporte incompleto" a nivel sistema si el número de
+  # registros nacionales es menor que esta fracción de la mediana global diaria.
+  # 0.10 separa los huecos de reporte (2024, dic-2025: < 8 %) del Paro Nacional
+  # de 2021 (caída real de la demanda que llega a ~16 %). Ver docs/m1_datos_y_eda.md.
+  umbral_cobertura_sistema: 0.10
+  # Último día con carga completa al momento de la descarga: abril de 2026 está
+  # cargado de forma parcial (la fuente se actualiza mensualmente).
+  fecha_corte_datos: "2026-03-30"
+  # Eventos que afectaron la demanda pero NO se conocen con 30 días de anticipación.
+  # Se marcan para el análisis y para enmascarar/ponderar el entrenamiento; NO
+  # deben usarse como variables predictoras.
+  eventos_no_previsibles:
+    - nombre: "Paro Nacional 2021 (bloqueos de vías)"
+      inicio: "2021-04-28"   # inicio del paro
+      fin: "2021-06-15"      # aproximado: el número de registros del sistema vuelve a >= 80 % de la mediana
+  # Huecos (de una ruta o de todo el sistema) de hasta esta longitud se imputan;
+  # los más largos parten la serie en segmentos.
+  max_hueco_imputable_dias: 14
+  # Caída extrema: si pasajeros < fraccion x mediana del mismo día de la semana,
+  # se considera falla de reporte aunque el día esté cerca de un evento de calendario.
+  # Excepción: los propios festivos y 24/31-dic (en rutas pendulares como
+  # Duitama-Sogamoso la demanda del 1-ene cae >90 % de verdad).
+  fraccion_caida_extrema: 0.15
+  # Un día de una ruta se marca como atípico si |z robusto| del log(pasajeros)
+  # frente a la mediana del mismo día de la semana en +-ventana días supera el umbral.
+  z_robusto_umbral: 5.0
+  ventana_atipicos_semanas: 8        # +-8 semanas del mismo día de la semana
+  # Umbrales de plausibilidad de pasajeros por despacho, por clase de vehículo.
+  # NO son normativos: son cotas generosas para detectar errores de digitación.
+  max_pax_por_despacho:
+    AUTOMOVIL: 6
+    CAMPERO: 10
+    CAMIONETA: 16
+    MICROBUS: 20
+    BUSETA: 33
+    BUS: 60
+
+calendario:
+  anio_inicio: 2020
+  anio_fin: 2027
+  # Temporadas escolares (calendario A, aproximación). Ver
+  # m1_demanda/data/calendar_features.py para las fuentes y supuestos.
+  vacaciones_mitad_anio: {inicio_mmdd: "06-15", fin_mmdd: "07-10"}
+  vacaciones_fin_anio:   {inicio_mmdd: "12-01", fin_mmdd: "01-20"}
+  temporada_fin_anio:    {inicio_mmdd: "12-15", fin_mmdd: "01-12"}
+  # Jornadas electorales nacionales (domingos). Se conocen con meses de anticipación
+  # (calendario electoral de la Registraduría Nacional del Estado Civil), por lo que
+  # son variables exógenas válidas para un pronóstico a 30 días.
+  elecciones:
+    - ["2022-03-13", "Congreso y consultas interpartidistas"]
+    - ["2022-05-29", "Presidencial, primera vuelta"]
+    - ["2022-06-19", "Presidencial, segunda vuelta"]
+    - ["2023-10-29", "Autoridades locales"]
+    - ["2026-03-08", "Congreso y consultas interpartidistas"]
+    - ["2026-05-31", "Presidencial, primera vuelta"]
+    - ["2026-06-21", "Presidencial, segunda vuelta"]
+
+particiones:
+  # Bloque continuo más largo con reporte completo: 2021-01-01 a 2023-12-31.
+  # El conjunto de prueba contiene temporada alta (puentes de oct/nov, Navidad y fin de año).
+  train: ["2021-01-01", "2023-06-30"]
+  val:   ["2023-07-01", "2023-09-30"]
+  test:  ["2023-10-01", "2023-12-31"]
+  # Bloque posterior al hueco de 2024 (sin dic-2025). Sirve como evaluación
+  # adicional fuera de tiempo y para el pronóstico "en producción" de la app.
+  post_hueco: ["2025-01-01", "2026-03-30"]
+  horizonte_dias: 30
+
+rutas_salida:
+  raw: data/m1_demanda/raw
+  external: data/m1_demanda/external
+  processed: data/m1_demanda/processed
+  figuras: reports/figures/m1
+  tablas: reports/tables

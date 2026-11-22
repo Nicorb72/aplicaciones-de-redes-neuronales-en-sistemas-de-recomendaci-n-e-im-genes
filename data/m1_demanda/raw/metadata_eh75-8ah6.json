@@ -1,0 +1,960 @@
+{
+  "id": "eh75-8ah6",
+  "name": "Operación de pasajeros y despacho de vehículos en la modalidad de transporte de pasajeros por carretera",
+  "assetType": "dataset",
+  "attribution": "Superintendencia de Transporte - SUPERTRANSPORTE, Bogotá D.C.",
+  "averageRating": 0,
+  "category": "Transporte",
+  "createdAt": 1615863513,
+  "description": "Corresponde a los datos de movilidad de pasajeros y despachos de vehículos desde las terminales terrestres de pasajeros habilitadas y/o homologadas del país,  presentados en el tablero de control publicado en el portal logístico de Colombia del Ministerio de Transporte.  Datos disponibles desde 1 de enero de 2021.",
+  "diciBackend": false,
+  "displayType": "table",
+  "downloadCount": 7175,
+  "hideFromCatalog": false,
+  "hideFromDataJson": false,
+  "licenseId": "CC_40_BY_SA",
+  "locked": false,
+  "newBackend": true,
+  "numberOfComments": 0,
+  "oid": 36737578,
+  "provenance": "official",
+  "publicationAppendEnabled": false,
+  "publicationDate": 1616125047,
+  "publicationGroup": 18138183,
+  "publicationStage": "published",
+  "rowsUpdatedAt": 1777788411,
+  "rowsUpdatedBy": "e53y-7yga",
+  "tableId": 18147472,
+  "totalTimesRated": 0,
+  "viewCount": 21553,
+  "viewLastModified": 1779130045,
+  "viewType": "tabular",
+  "approvals": [
+    {
+      "reviewedAt": 1619103689,
+      "reviewedAutomatically": false,
+      "state": "approved",
+      "submissionId": 3548285,
+      "submissionObject": "public_audience_request",
+      "submissionOutcome": "change_audience",
+      "submittedAt": 1619047646,
+      "targetAudience": "public",
+      "workflowId": 2188,
+      "reviewer": {
+        "id": "r4qn-dwdd",
+        "displayName": "Ministerio de Tecnologías de la Información y las Comunicaciones - Datos Abiertos"
+      },
+      "submissionDetails": {
+        "permissionType": "read"
+      },
+      "submissionOutcomeApplication": {
+        "endedAt": 1619103689,
+        "failureCount": 0,
+        "startedAt": 1619103689,
+        "status": "success"
+      },
+      "submitter": {
+        "id": "ud2r-97qc",
+        "displayName": "Supertransporte"
+      }
+    }
+  ],
+  "clientContext": {
+    "clientContextVariables": [],
+    "inheritedVariables": {}
+  },
+  "columns": [
+    {
+      "id": 530781777,
+      "name": "TERMINAL",
+      "dataTypeName": "text",
+      "description": "Corresponde a la sede de la terminal desde donde se realizan y reportan los despachos",
+      "fieldName": "terminal",
+      "position": 1,
+      "renderTypeName": "text",
+      "tableColumnId": 133165819,
+      "cachedContents": {
+        "non_null": "49202812",
+        "largest": "T.T. DE YARUMAL",
+        "null": "0",
+        "top": [
+          {
+            "item": "T.T. DE BOGOTÁ SALITRE",
+            "count": "4501536"
+          },
+          {
+            "item": "T.T. DE CALI",
+            "count": "4012777"
+          },
+          {
+            "item": "T.T. DE MEDELLÍN NORTE",
+            "count": "2748727"
+          },
+          {
+            "item": "T.T. DE ARMENIA",
+            "count": "2669142"
+          },
+          {
+            "item": "T.T. DE PEREIRA",
+            "count": "2463278"
+          },
+          {
+            "item": "T.T. DE BOGOTÁ NORTE",
+            "count": "1602700"
+          },
+          {
+            "item": "T.T. DE TUNJA",
+            "count": "1568740"
+          },
+          {
+            "item": "T.T. DE TULÚA",
+            "count": "1305139"
+          },
+          {
+            "item": "T.T. DE DUITAMA",
+            "count": "1291079"
+          },
+          {
+            "item": "T.T. DE APARTADÓ",
+            "count": "1166492"
+          },
+          {
+            "item": "T.T. DE IBAGUÉ",
+            "count": "1143593"
+          },
+          {
+            "item": "T.T. DE BOGOTÁ SUR",
+            "count": "1132969"
+          },
+          {
+            "item": "T.T. DE PASTO",
+            "count": "1130559"
+          },
+          {
+            "item": "T.T. DE CARTAGENA",
+            "count": "1067285"
+          },
+          {
+            "item": "T.T. DE VILLAVICENCIO",
+            "count": "1062133"
+          },
+          {
+            "item": "T.T. DE NEIVA",
+            "count": "1022713"
+          },
+          {
+            "item": "T.T. DE MEDELLÍN SUR",
+            "count": "998449"
+          },
+          {
+            "item": "T.T. DE MANIZALES",
+            "count": "953568"
+          },
+          {
+            "item": "T.T. DE SOGAMOSO",
+            "count": "941772"
+          },
+          {
+            "item": "T.T. DE BUGA",
+            "count": "913325"
+          }
+        ],
+        "smallest": "T.T. DE AGUACHICA",
+        "count": "49202812",
+        "cardinality": "49202812"
+      },
+      "format": {}
+    },
+    {
+      "id": 530781778,
+      "name": "CLASE_VEHICULO",
+      "dataTypeName": "text",
+      "description": "Identificador numérico dado por el RUNT",
+      "fieldName": "clase_vehiculo",
+      "position": 2,
+      "renderTypeName": "text",
+      "tableColumnId": 133427282,
+      "cachedContents": {
+        "non_null": "49202812",
+        "largest": "MICROBUS",
+        "null": "0",
+        "top": [
+          {
+            "item": "BUS",
+            "count": "17791956"
+          },
+          {
+            "item": "MICROBUS",
+            "count": "17751532"
+          },
+          {
+            "item": "BUSETA",
+            "count": "5568838"
+          },
+          {
+            "item": "CAMIONETA",
+            "count": "5542894"
+          },
+          {
+            "item": "AUTOMOVIL",
+            "count": "1680520"
+          },
+          {
+            "item": "CAMPERO",
+            "count": "867072"
+          }
+        ],
+        "smallest": "AUTOMOVIL",
+        "count": "49202812",
+        "cardinality": "49202812"
+      },
+      "format": {}
+    },
+    {
+      "id": 530781779,
+      "name": "NIVEL_SERVICIO",
+      "dataTypeName": "text",
+      "description": "1 BASICO - CORRIENTE 2 LUJO 3 CORRIENTE DIRECTO",
+      "fieldName": "nivel_servicio",
+      "position": 3,
+      "renderTypeName": "text",
+      "tableColumnId": 133427193,
+      "cachedContents": {
+        "non_null": "49202812",
+        "largest": "PREFERENCIAL DE LUJO",
+        "null": "0",
+        "top": [
+          {
+            "item": "LUJO",
+            "count": "30643075"
+          },
+          {
+            "item": "BASICO",
+            "count": "18554259"
+          },
+          {
+            "item": "PREFERENCIAL DE LUJO",
+            "count": "5478"
+          }
+        ],
+        "smallest": "BASICO",
+        "count": "49202812",
+        "cardinality": "49202812"
+      },
+      "format": {}
+    },
+    {
+      "id": 530781787,
+      "name": "MUNICIPIO_ORIGEN_RUTA",
+      "dataTypeName": "text",
+      "description": "Código Divipola del municipio de origen de la ruta",
+      "fieldName": "municipio_origen_ruta",
+      "position": 4,
+      "renderTypeName": "text",
+      "tableColumnId": 133427304,
+      "cachedContents": {
+        "non_null": "49202812",
+        "largest": "99773",
+        "null": "0",
+        "top": [
+          {
+            "item": "11001",
+            "count": "9378461"
+          },
+          {
+            "item": "76001",
+            "count": "4932897"
+          },
+          {
+            "item": "05001",
+            "count": "4000161"
+          },
+          {
+            "item": "63001",
+            "count": "2545979"
+          },
+          {
+            "item": "66001",
+            "count": "2167119"
+          },
+          {
+            "item": "41001",
+            "count": "1252847"
+          },
+          {
+            "item": "73001",
+            "count": "1204724"
+          },
+          {
+            "item": "13001",
+            "count": "1176050"
+          },
+          {
+            "item": "05045",
+            "count": "1166492"
+          },
+          {
+            "item": "15759",
+            "count": "1135633"
+          },
+          {
+            "item": "17001",
+            "count": "1124586"
+          },
+          {
+            "item": "15001",
+            "count": "1112068"
+          },
+          {
+            "item": "52001",
+            "count": "1071258"
+          },
+          {
+            "item": "15238",
+            "count": "1001285"
+          },
+          {
+            "item": "54001",
+            "count": "984137"
+          },
+          {
+            "item": "50001",
+            "count": "949112"
+          },
+          {
+            "item": "08001",
+            "count": "898860"
+          },
+          {
+            "item": "23001",
+            "count": "866914"
+          },
+          {
+            "item": "68001",
+            "count": "850137"
+          },
+          {
+            "item": "52356",
+            "count": "767946"
+          }
+        ],
+        "smallest": "05001",
+        "count": "49202812",
+        "cardinality": "49202812"
+      },
+      "format": {
+        "noCommas": "true"
+      }
+    },
+    {
+      "id": 530781788,
+      "name": "MUNICIPIO_DESTINO_RUTA",
+      "dataTypeName": "text",
+      "description": "Código Divipola del departamento de destino de la ruta",
+      "fieldName": "municipio_destino_ruta",
+      "position": 5,
+      "renderTypeName": "text",
+      "tableColumnId": 133427305,
+      "cachedContents": {
+        "non_null": "49202812",
+        "largest": "99773",
+        "null": "0",
+        "top": [
+          {
+            "item": "11001",
+            "count": "3612905"
+          },
+          {
+            "item": "76001",
+            "count": "1846414"
+          },
+          {
+            "item": "41001",
+            "count": "917091"
+          },
+          {
+            "item": "15759",
+            "count": "900686"
+          },
+          {
+            "item": "73001",
+            "count": "871424"
+          },
+          {
+            "item": "25740",
+            "count": "859958"
+          },
+          {
+            "item": "25307",
+            "count": "845450"
+          },
+          {
+            "item": "05001",
+            "count": "796846"
+          },
+          {
+            "item": "08001",
+            "count": "697424"
+          },
+          {
+            "item": "66001",
+            "count": "677186"
+          },
+          {
+            "item": "66682",
+            "count": "674211"
+          },
+          {
+            "item": "17001",
+            "count": "656619"
+          },
+          {
+            "item": "68001",
+            "count": "620607"
+          },
+          {
+            "item": "63001",
+            "count": "612428"
+          },
+          {
+            "item": "05837",
+            "count": "601795"
+          },
+          {
+            "item": "05615",
+            "count": "524469"
+          },
+          {
+            "item": "47570",
+            "count": "508614"
+          },
+          {
+            "item": "76147",
+            "count": "506025"
+          },
+          {
+            "item": "13001",
+            "count": "480370"
+          },
+          {
+            "item": "54001",
+            "count": "454633"
+          }
+        ],
+        "smallest": "05001",
+        "count": "49202812",
+        "cardinality": "49202812"
+      },
+      "format": {
+        "noCommas": "true"
+      }
+    },
+    {
+      "id": 530781782,
+      "name": "FECHA_DESPACHO",
+      "dataTypeName": "calendar_date",
+      "description": "Fecha de realización del despacho. date (DD/MM/YYYY)",
+      "fieldName": "fecha_despacho",
+      "position": 6,
+      "renderTypeName": "calendar_date",
+      "tableColumnId": 133165821,
+      "cachedContents": {
+        "non_null": "49202812",
+        "largest": "6202-04-13T00:00:00.000",
+        "null": "0",
+        "top": [
+          {
+            "item": "2025-04-16T00:00:00.000",
+            "count": "42739"
+          },
+          {
+            "item": "2022-12-30T00:00:00.000",
+            "count": "42432"
+          },
+          {
+            "item": "2025-01-04T00:00:00.000",
+            "count": "42034"
+          },
+          {
+            "item": "2025-06-28T00:00:00.000",
+            "count": "41726"
+          },
+          {
+            "item": "2025-01-03T00:00:00.000",
+            "count": "41563"
+          },
+          {
+            "item": "2022-12-23T00:00:00.000",
+            "count": "40930"
+          },
+          {
+            "item": "2025-06-27T00:00:00.000",
+            "count": "40790"
+          },
+          {
+            "item": "2023-04-05T00:00:00.000",
+            "count": "40418"
+          },
+          {
+            "item": "2025-04-12T00:00:00.000",
+            "count": "40373"
+          },
+          {
+            "item": "2025-06-21T00:00:00.000",
+            "count": "40197"
+          },
+          {
+            "item": "2022-12-29T00:00:00.000",
+            "count": "40087"
+          },
+          {
+            "item": "2026-01-03T00:00:00.000",
+            "count": "40045"
+          },
+          {
+            "item": "2025-10-10T00:00:00.000",
+            "count": "40016"
+          },
+          {
+            "item": "2025-04-20T00:00:00.000",
+            "count": "39999"
+          },
+          {
+            "item": "2023-07-01T00:00:00.000",
+            "count": "39946"
+          },
+          {
+            "item": "2025-10-11T00:00:00.000",
+            "count": "39803"
+          },
+          {
+            "item": "2022-04-13T00:00:00.000",
+            "count": "39787"
+          },
+          {
+            "item": "2025-08-16T00:00:00.000",
+            "count": "39771"
+          },
+          {
+            "item": "2025-04-21T00:00:00.000",
+            "count": "39717"
+          },
+          {
+            "item": "2026-01-10T00:00:00.000",
+            "count": "39686"
+          }
+        ],
+        "smallest": "2019-08-04T00:00:00.000",
+        "count": "49202812",
+        "cardinality": "49202812"
+      },
+      "format": {}
+    },
+    {
+      "id": 530781783,
+      "name": "HORA_DESPACHO",
+      "dataTypeName": "text",
+      "description": "Hora 24H (hh)",
+      "fieldName": "hora_despacho",
+      "position": 7,
+      "renderTypeName": "text",
+      "tableColumnId": 133407655,
+      "cachedContents": {
+        "non_null": "49202812",
+        "largest": "23",
+        "null": "0",
+        "top": [
+          {
+            "item": "15",
+            "count": "3261855"
+          },
+          {
+            "item": "10",
+            "count": "3248975"
+          },
+          {
+            "item": "14",
+            "count": "3234119"
+          },
+          {
+            "item": "16",
+            "count": "3216504"
+          },
+          {
+            "item": "08",
+            "count": "3191263"
+          },
+          {
+            "item": "11",
+            "count": "3189620"
+          },
+          {
+            "item": "09",
+            "count": "3189242"
+          },
+          {
+            "item": "13",
+            "count": "3138554"
+          },
+          {
+            "item": "12",
+            "count": "3096679"
+          },
+          {
+            "item": "07",
+            "count": "3074202"
+          },
+          {
+            "item": "06",
+            "count": "2919491"
+          },
+          {
+            "item": "17",
+            "count": "2877395"
+          },
+          {
+            "item": "18",
+            "count": "2403249"
+          },
+          {
+            "item": "05",
+            "count": "2059390"
+          },
+          {
+            "item": "19",
+            "count": "1755401"
+          },
+          {
+            "item": "20",
+            "count": "1247496"
+          },
+          {
+            "item": "04",
+            "count": "1052277"
+          },
+          {
+            "item": "21",
+            "count": "846781"
+          },
+          {
+            "item": "22",
+            "count": "612626"
+          },
+          {
+            "item": "23",
+            "count": "408790"
+          }
+        ],
+        "smallest": "00",
+        "count": "49202812",
+        "cardinality": "49202812"
+      },
+      "format": {}
+    },
+    {
+      "id": 530781784,
+      "name": "TIPO_DESPACHO",
+      "dataTypeName": "text",
+      "description": "1 = Si el despacho de la ruta es en origen, y 2 = Si el despacho de la ruta es en transito",
+      "fieldName": "tipo_despacho",
+      "position": 8,
+      "renderTypeName": "text",
+      "tableColumnId": 133427192,
+      "cachedContents": {
+        "non_null": "49202812",
+        "largest": "TRANSITO",
+        "null": "0",
+        "top": [
+          {
+            "item": "ORIGEN",
+            "count": "39124098"
+          },
+          {
+            "item": "TRANSITO",
+            "count": "10078714"
+          }
+        ],
+        "smallest": "ORIGEN",
+        "count": "49202812",
+        "cardinality": "49202812"
+      },
+      "format": {}
+    },
+    {
+      "id": 530781785,
+      "name": "DESPACHOS",
+      "dataTypeName": "number",
+      "description": "Número vehículos de transporte de pasajeros por carretera que salen desde la terminal",
+      "fieldName": "despachos",
+      "position": 9,
+      "renderTypeName": "number",
+      "tableColumnId": 133407622,
+      "cachedContents": {
+        "non_null": "49202812",
+        "largest": "20",
+        "null": "0",
+        "top": [
+          {
+            "item": "1",
+            "count": "47860862"
+          },
+          {
+            "item": "2",
+            "count": "1148699"
+          },
+          {
+            "item": "3",
+            "count": "134281"
+          },
+          {
+            "item": "4",
+            "count": "38555"
+          },
+          {
+            "item": "5",
+            "count": "12049"
+          },
+          {
+            "item": "6",
+            "count": "4207"
+          },
+          {
+            "item": "7",
+            "count": "1570"
+          },
+          {
+            "item": "8",
+            "count": "690"
+          },
+          {
+            "item": "9",
+            "count": "417"
+          },
+          {
+            "item": "10",
+            "count": "299"
+          },
+          {
+            "item": "11",
+            "count": "292"
+          },
+          {
+            "item": "12",
+            "count": "285"
+          },
+          {
+            "item": "13",
+            "count": "270"
+          },
+          {
+            "item": "14",
+            "count": "201"
+          },
+          {
+            "item": "15",
+            "count": "98"
+          },
+          {
+            "item": "16",
+            "count": "24"
+          },
+          {
+            "item": "17",
+            "count": "10"
+          },
+          {
+            "item": "18",
+            "count": "1"
+          },
+          {
+            "item": "19",
+            "count": "1"
+          },
+          {
+            "item": "20",
+            "count": "1"
+          }
+        ],
+        "smallest": "1",
+        "count": "49202812",
+        "cardinality": "49202812"
+      },
+      "format": {}
+    },
+    {
+      "id": 530781786,
+      "name": "PASAJEROS",
+      "dataTypeName": "number",
+      "description": "Número de pasajeros que abordaron viaje desde la terminal de transporte. Las terminales en tránsito sólo deben reportar los pasajeros que abordaron el vehículo en dicha terminal.",
+      "fieldName": "pasajeros",
+      "position": 10,
+      "renderTypeName": "number",
+      "tableColumnId": 133165820,
+      "cachedContents": {
+        "non_null": "49202812",
+        "largest": "640",
+        "null": "0",
+        "top": [
+          {
+            "item": "0",
+            "count": "6576784"
+          },
+          {
+            "item": "8",
+            "count": "4553361"
+          },
+          {
+            "item": "4",
+            "count": "3530429"
+          },
+          {
+            "item": "5",
+            "count": "3351078"
+          },
+          {
+            "item": "6",
+            "count": "2879282"
+          },
+          {
+            "item": "2",
+            "count": "2804264"
+          },
+          {
+            "item": "3",
+            "count": "2624563"
+          },
+          {
+            "item": "1",
+            "count": "2555280"
+          },
+          {
+            "item": "10",
+            "count": "2311237"
+          },
+          {
+            "item": "9",
+            "count": "2039331"
+          },
+          {
+            "item": "7",
+            "count": "2010253"
+          },
+          {
+            "item": "12",
+            "count": "1619374"
+          },
+          {
+            "item": "19",
+            "count": "1445490"
+          },
+          {
+            "item": "15",
+            "count": "1440557"
+          },
+          {
+            "item": "11",
+            "count": "1118536"
+          },
+          {
+            "item": "14",
+            "count": "1097453"
+          },
+          {
+            "item": "18",
+            "count": "917465"
+          },
+          {
+            "item": "16",
+            "count": "851899"
+          },
+          {
+            "item": "13",
+            "count": "808997"
+          },
+          {
+            "item": "17",
+            "count": "649257"
+          }
+        ],
+        "smallest": "0",
+        "count": "49202812",
+        "cardinality": "49202812"
+      },
+      "format": {}
+    }
+  ],
+  "grants": [
+    {
+      "inherited": false,
+      "type": "viewer",
+      "flags": [
+        "public"
+      ]
+    }
+  ],
+  "license": {
+    "name": "Creative Commons Attribution | Share Alike 4.0 International",
+    "logoUrl": "images/licenses/cc30bysa.png",
+    "termsLink": "http://creativecommons.org/licenses/by-sa/4.0/legalcode"
+  },
+  "metadata": {
+    "custom_fields": {
+      "Información de la Entidad": {
+        "Municipio": "Bogotá D.C.",
+        "Nombre de la Entidad": "Superintendencia de Transporte - SUPERTRANSPORTE, Bogotá D.C.",
+        "DIVIPOLA Municipio": "11001",
+        "Orden": "Nacional",
+        "Sector": "Transporte",
+        "Departamento": "Bogotá D.C."
+      },
+      "Información de Datos": {
+        "Cobertura Geográfica": "Nacional",
+        "Idioma": "Español",
+        "Frecuencia de Actualización": "Mensual"
+      }
+    }
+  },
+  "owner": {
+    "id": "e53y-7yga",
+    "displayName": "datosabiertos@supertransporte.gov.co",
+    "profileImageUrlLarge": "/api/users/e53y-7yga/profile_images/LARGE",
+    "profileImageUrlMedium": "/api/users/e53y-7yga/profile_images/THUMB",
+    "profileImageUrlSmall": "/api/users/e53y-7yga/profile_images/TINY",
+    "screenName": "datosabiertos@supertransporte.gov.co",
+    "type": "interactive",
+    "flags": [
+      "acceptedEula",
+      "mayBeStoriesCoOwner"
+    ]
+  },
+  "query": {},
+  "rights": [
+    "read"
+  ],
+  "tableAuthor": {
+    "id": "e53y-7yga",
+    "displayName": "datosabiertos@supertransporte.gov.co",
+    "profileImageUrlLarge": "/api/users/e53y-7yga/profile_images/LARGE",
+    "profileImageUrlMedium": "/api/users/e53y-7yga/profile_images/THUMB",
+    "profileImageUrlSmall": "/api/users/e53y-7yga/profile_images/TINY",
+    "screenName": "datosabiertos@supertransporte.gov.co",
+    "type": "interactive",
+    "flags": [
+      "acceptedEula",
+      "mayBeStoriesCoOwner"
+    ]
+  },
+  "tags": [
+    "terminales",
+    "pasajeros",
+    "supertransporte",
+    "tppc"
+  ],
+  "flags": [
+    "default",
+    "ownerMayBeContacted",
+    "restorable",
+    "restorePossibleForType"
+  ],
+  "_descargado_utc": "2026-11-22T02:26:47.322975+00:00"
+}
