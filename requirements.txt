@@ -1,2 +1,13 @@
-# Dependencias fijadas a versiones específicas (pendiente de completar).
-# Ejemplo de formato: paquete==0.0.0
+# Dependencias fijadas a versiones específicas. Probado con Python 3.12.
+# Formato: paquete==versión. Cada persona agrega las de su módulo.
+
+# --- Módulo 1: datos y análisis descriptivo (Persona 1) ---
+numpy==2.5.5
+pandas==3.1.1
+matplotlib==3.11.2
+scipy==1.18.1
+statsmodels==0.15.0
+pyyaml==6.0.4
+requests==2.34.2
+holidays==0.109   # solo para verificar el calendario de festivos propio
+pytest==9.2.0
