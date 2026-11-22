@@ -1,0 +1,12 @@
+# arquitectura:
+# aumento de datos:
+# lr:
+# epochs:
+# umbral de alerta:
+# agrupación de clases:
+architecture:
+data_augmentation:
+lr:
+epochs:
+alert_threshold:
+class_grouping:

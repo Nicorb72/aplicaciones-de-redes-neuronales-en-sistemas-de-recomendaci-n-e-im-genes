@@ -1,0 +1,12 @@
+# dim embeddings:
+# negativos:
+# pérdida:
+# K:
+# lr:
+# epochs:
+embedding_dim:
+negatives:
+loss:
+k:
+lr:
+epochs:
