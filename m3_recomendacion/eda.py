@@ -1,7 +1,6 @@
 
 """
 Módulo 3: Análisis exploratorio de recomendaciones.
-Responsable: Persona 4.
 
 Objetivo:
 Analizar las características de los usuarios,

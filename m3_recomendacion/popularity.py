@@ -1,7 +1,6 @@
 
 """
 Módulo 3: Recomendación basada en popularidad.
-Responsable: Persona 4.
 
 Modelo de referencia implementado con PyTorch.
 
