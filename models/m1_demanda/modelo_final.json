@@ -1,0 +1,16 @@
+{
+  "familia": "mlp",
+  "config_rank": 1,
+  "mase_val_media": 0.853934863191337,
+  "por_familia": {
+    "mlp": {
+      "config_rank": 1,
+      "mase_val_media": 0.853934863191337
+    },
+    "rnn": {
+      "config_rank": 1,
+      "mase_val_media": 0.8575663740267649
+    }
+  },
+  "criterio": "menor MASE medio de VALIDACIÓN entre las 30 semillas de la configuración final de cada familia"
+}

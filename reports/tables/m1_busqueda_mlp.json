@@ -1,0 +1,10 @@
+{
+  "nombre": "mlp",
+  "presupuesto": 30,
+  "n_configuraciones": 30,
+  "tiempo_total_s": 156.691,
+  "familia": "mlp",
+  "semilla_busqueda": 2026,
+  "criterio": "menor MASE medio en orígenes semanales de VALIDACIÓN; desempate por pinball escalada",
+  "top_k": 2
+}

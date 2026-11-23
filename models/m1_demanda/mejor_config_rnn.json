@@ -1,0 +1,106 @@
+{
+  "nombre": "rnn",
+  "presupuesto": 30,
+  "n_configuraciones": 30,
+  "tiempo_total_s": 921.033,
+  "familia": "rnn",
+  "semilla_busqueda": 2026,
+  "criterio": "menor MASE medio en orígenes semanales de VALIDACIÓN; desempate por pinball escalada",
+  "top_k": 2,
+  "configuraciones": [
+    {
+      "rank": 1,
+      "indice_busqueda": 26,
+      "muestra": {
+        "window": 56,
+        "units": 64,
+        "dropout": 0.06235648247158012,
+        "weight_decay": 1.012523502488203e-05,
+        "lr": 0.0021950999417064626,
+        "batch_size": 256,
+        "route_embedding_dim": 4,
+        "cell": "gru",
+        "hidden": 64,
+        "rnn_layers": 2
+      },
+      "hp": {
+        "window": 56,
+        "layers": 2,
+        "units": 64,
+        "regularization": {
+          "dropout": 0.06235648247158012,
+          "weight_decay": 1.012523502488203e-05
+        },
+        "lr": 0.0021950999417064626,
+        "batch_size": 256,
+        "epochs": 200,
+        "patience": 15,
+        "route_embedding_dim": 4,
+        "quantile": 0.9,
+        "quantile_weight": 1.0,
+        "optimizer": "adam",
+        "rnn": {
+          "cell": "gru",
+          "hidden": 64,
+          "layers": 2
+        },
+        "horizon": 30
+      },
+      "metricas_validacion": {
+        "mase": 0.8567700031451247,
+        "mae": 251.16900438799905,
+        "cobertura": 0.9127090301003344,
+        "pinball_escalada": 0.19916968236584573,
+        "val_perdida": 1.0046313085160037
+      },
+      "n_parametros": 103204
+    },
+    {
+      "rank": 2,
+      "indice_busqueda": 21,
+      "muestra": {
+        "window": 56,
+        "units": 128,
+        "dropout": 0.10313566380056831,
+        "weight_decay": 0.00011651561105775636,
+        "lr": 0.002497756460351763,
+        "batch_size": 256,
+        "route_embedding_dim": 3,
+        "cell": "gru",
+        "hidden": 16,
+        "rnn_layers": 1
+      },
+      "hp": {
+        "window": 56,
+        "layers": 2,
+        "units": 128,
+        "regularization": {
+          "dropout": 0.10313566380056831,
+          "weight_decay": 0.00011651561105775636
+        },
+        "lr": 0.002497756460351763,
+        "batch_size": 256,
+        "epochs": 200,
+        "patience": 15,
+        "route_embedding_dim": 3,
+        "quantile": 0.9,
+        "quantile_weight": 1.0,
+        "optimizer": "adam",
+        "rnn": {
+          "cell": "gru",
+          "hidden": 16,
+          "layers": 1
+        },
+        "horizon": 30
+      },
+      "metricas_validacion": {
+        "mase": 0.8716667785650752,
+        "mae": 258.7684388023555,
+        "cobertura": 0.9374581939799331,
+        "pinball_escalada": 0.20499647006092095,
+        "val_perdida": 1.0054082131541517
+      },
+      "n_parametros": 116218
+    }
+  ]
+}

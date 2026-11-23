@@ -1,0 +1,12 @@
+capa,tipo,salida,parametros
+entrada: x_hist,tensor,"(N, 56)",0
+entrada: cal_hist,tensor,"(N, 56, 27)",0
+entrada: cal_fut,tensor,"(N, 30, 27)",0
+entrada: ruta_idx,tensor,(N),0
+codificador,GRU,"(N, 56, 64)",43008
+embedding,Embedding,"(N, 4)",40
+tronco.0,Linear,"(N, 64)",56256
+tronco.1,ReLU,"(N, 64)",0
+tronco.2,Dropout,"(N, 64)",0
+cabezas.media,Linear,"(N, 30)",1950
+cabezas.cuantil,Linear,"(N, 30)",1950

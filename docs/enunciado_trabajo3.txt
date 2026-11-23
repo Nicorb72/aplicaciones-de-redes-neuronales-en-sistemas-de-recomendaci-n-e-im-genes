@@ -1,0 +1,367 @@
+Trabajo 3: Redes neuronales para series de tiempo, imágenes y 
+recomendación 
+Sistema inteligente integrado para pronóstico de demanda, seguridad vial y recomendación en una 
+empresa de transporte 
+Profesor: Juan David Ospina Arango 
+Monitor: Andrés Mauricio Zapata Rincón 
+Universidad Nacional de Colombia, Facultad de Minas, Departamento de Ciencias de la Computación y de 
+la Decisión 
+Curso: Redes neuronales y algoritmos bioinspirados. Semestre 2026-02 
+Modalidad: trabajo en equipo, con sustentación oral y evaluación individual 
+Propósito 
+Una empresa de transporte intermunicipal de pasajeros enfrenta tres retos: saber cuántas personas 
+viajarán en sus rutas y con qué recursos atenderlas, detectar conductores que manejan distraídos y 
+ofrecer a sus clientes destinos de viaje acordes con sus preferencias (en este caso, destinos en el 
+extranjero). En este trabajo van a resolver tres problemas con redes neuronales: uno de series de tiempo, 
+otro de clasificación de imágenes y otro de sistemas de recomendación. Además, van a integrar sus 
+modelos en una aplicación web y traducir sus resultados en decisiones de negocio. 
+Las redes neuronales no siempre son la mejor herramienta. Parte del reto es averiguar, con evidencia y 
+comparaciones justas, qué aporta cada uno en cada problema y qué no, y cuánto vale esa diferencia para 
+la empresa. 
+Pueden (y se espera) que usen herramientas de inteligencia artificial. Pero la IA se equivoca, a veces con 
+total seguridad. Parte del trabajo consiste en demostrar que ustedes entienden lo suficiente como para 
+darse cuenta. Lo que se evalúa no es solo lo que entregan, sino también lo que son capaces de explicar, 
+modificar y defender en vivo. 
+Objetivo general 
+Desarrollar un sistema basado en redes neuronales que integre el pronóstico de la demanda de transporte 
+y la planeación de la operación, la clasificación de comportamientos distractores de los conductores a 
+partir de imágenes y la recomendación personalizada de destinos de viaje. 
+Objetivos específicos 
+1. Pronosticar la demanda de pasajeros por ruta para los próximos 30 días y dimensionar, en función 
+de ella, la flota y los conductores requeridos. 
+2. Clasificar imágenes de conductores según su comportamiento al volante. 
+3. Recomendar destinos de viaje a partir del historial y de las preferencias de los usuarios. 
+4. Comparar cada red neuronal con un modelo de referencia en condiciones equivalentes. 
+5. Integrar los tres módulos en una aplicación web publicada. 
+6. Documentar el proceso en un reporte técnico reproducible. 
+Módulo 1: Pronóstico de demanda y planeación de la operación 
+Una empresa de transporte intermunicipal necesita saber cuántas personas querrán viajar en cada una 
+de sus rutas durante los próximos 30 días y, con esa información, decidir cuántos vehículos despachar y 
+con cuántos conductores. Un pronóstico que se queda corto deja pasajeros en la terminal; uno que se 
+pasa deja vehículos y conductores ociosos. 
+Datos 
+Usarán el conjunto de datos "Operación de pasajeros y despacho de vehículos en la modalidad de 
+transporte de pasajeros por carretera", publicado por la Superintendencia de Transporte en datos.gov.co 
+(enlace). 
+Para identificar los municipios, usarán la codificación DIVIPOLA del DANE, citada de la fuente oficial. 
+Reporten el número de registros y de variables, el periodo que cubren y las rutas analizadas. Citen el 
+significado de las variables del diccionario del conjunto. Si encuentran inconsistencias entre el diccionario 
+y los datos, documéntenlas. 
+Tareas 
+1. Caso de uso. Describan quién usa el pronóstico, para qué decisión, con cuánta anticipación y con 
+qué información disponible en ese momento. Ninguna variable puede depender de información 
+que no se conozca 30 días antes. 
+2. Construcción de las series. Definan la variable objetivo (pasajeros por ruta y por día) y 
+documenten cómo agregan los registros, cómo manejan los días sin registros y cómo detectan y 
+tratan los datos anómalos (por ejemplo, despachos con cero pasajeros). 
+3. Análisis descriptivo. Formulen hipótesis explícitas sobre qué determina la demanda: el día de la 
+semana, los festivos y puentes, las temporadas escolares, Semana Santa, el fin de año y la 
+recuperación posterior a la pandemia. Analicen la tendencia y la estacionalidad de cada ruta. Al 
+final, digan qué hipótesis se confirmaron. 
+4. Variables exógenas. Pueden incorporar información externa (calendario de festivos, temporadas, 
+eventos) si está disponible en el momento de la decisión, está guardada en el repositorio y se cita 
+su fuente primaria. 
+5. Modelos de referencia. Ajusten un pronóstico ingenuo estacional (por ejemplo, el mismo día de 
+la semana anterior) y un modelo estadístico o lineal (SARIMA, suavizamiento exponencial o 
+regresión lineal con rezagos y calendario). 
+6. Redes neuronales. Construyan y optimicen un perceptrón multicapa con ventanas de rezagos y 
+al menos una arquitectura secuencial (LSTM, GRU o convolucional 1D): longitud de ventana, 
+capas, unidades, regularización, optimizador y tasa de aprendizaje. Justifiquen el método de 
+búsqueda y si entrenan un modelo por ruta o uno global. 
+7. Función de pérdida. Justifiquen la pérdida a partir de la naturaleza de la variable objetivo, que es 
+de conteo. Además del pronóstico puntual, estimen al menos un cuantil alto (por ejemplo, el P90). 
+8. Evaluación. Usen particiones temporales y evaluación con origen rodante para el horizonte de 30 
+días. Reporten MAE, RMSE y MASE por ruta y agregados; el error por horizonte (días 1–7, 8–14, 
+15–30); cobertura y pérdida cuantílica; y gráficas de pronóstico frente a la demanda real por ruta, 
+con al menos una temporada alta en el conjunto de prueba. 
+Preguntas de negocio 
+Los parámetros operativos (capacidad por clase de vehículo, ocupación objetivo, tiempo de ciclo por ruta, 
+horas de operación, jornada de los conductores y costos) deben estar en un archivo de configuración. 
+Todo valor tomado de una norma debe citarse a partir de la fuente primaria. 
+1. Dimensionamiento de flota. ¿Cuántos despachos y cuántos vehículos se necesitan por ruta y por 
+día durante los próximos 30 días? Escriban la fórmula y justifiquen cada término: capacidad, 
+ocupación objetivo, vueltas posibles por vehículo y día. Si la demanda real resulta un 10 % mayor 
+o menor que el pronóstico, ¿cómo cambia la flota y qué parámetro afecta más el resultado? 
+2. Conductores. ¿Cuántos conductores se requieren para operar esa flota, considerando la jornada 
+máxima, los descansos y el ausentismo? Citen la normativa colombiana vigente sobre la jornada 
+de conductores desde su fuente oficial. 
+3. Valor del pronóstico. ¿Dimensionarían con el pronóstico puntual o con un cuantil alto? Para el 
+periodo de prueba, cuantifiquen los pasajeros sin atender y los vehículos-día sobrantes con cada 
+opción, usando la mejor red neuronal y el mejor modelo de referencia. ¿Cómo cambia la decisión 
+según el costo relativo de quedarse corto frente al de sobrar? ¿Justifica la red neuronal su 
+complejidad en términos operativos? 
+4. Temporada alta. Para la próxima temporada alta del horizonte de prueba (por ejemplo, un puente 
+festivo o el fin de año), ¿cuántos vehículos y conductores adicionales se requieren en comparación 
+con una semana normal? ¿Recomendarían flota propia, arrendada o convenios con otras 
+empresas? 
+Limitaciones que deben discutir 
+• Los datos registran a los pasajeros que abordan en la terminal de origen, no a quienes suben en 
+la vía. 
+• Cada ruta tiene un sentido de regreso que es otra serie; ¿cómo lo incorporan al cálculo de vueltas 
+y flota? 
+• La demanda observada está limitada por la oferta: si no hay sillas, el pasajero no aparece. 
+Fundamentación matemática del módulo 
+• Ecuaciones de la arquitectura secuencial utilizada. 
+• Derivación de la pérdida para conteos y de la pérdida cuantílica a partir de un modelo 
+probabilístico. 
+• Definición de MASE, cobertura y pérdida cuantílica. 
+• Formulación del modelo de dimensionamiento de flota y conductores. 
+Figuras mínimas del módulo 
+• Series de demanda de las rutas analizadas. 
+• Descomposición en tendencia y estacionalidad (semanal y anual) de al menos una ruta. 
+• Pronóstico frente a demanda real por ruta, con la banda del cuantil alto. 
+• Error según el horizonte (días 1 a 30), para cada modelo. 
+• Flota y conductores requeridos por día durante los 30 días pronosticados. 
+• Sensibilidad de la flota requerida frente a variaciones de la demanda y del parámetro operativo 
+más influyente. 
+Módulo 2: Clasificación de conducción distractiva 
+La empresa quiere instalar cámaras en sus vehículos para detectar cuándo un conductor maneja distraído 
+y generar una alerta. Una alerta que no se dispara deja pasar un riesgo; una que se dispara sin motivo 
+hace que los conductores dejen de prestarle atención. 
+Datos 
+Usarán el conjunto Multi-Class Driver Behavior Image Dataset (Afridi et al., 2024), publicado en Mendeley 
+Data (DOI 10.17632/mzb4b6dff3.1) y descrito en Data in Brief (DOI 10.1016/j.dib.2025.111529). Contiene 
+imágenes de conductores de carros particulares y buses públicos tomadas con celulares en Dhaka 
+(Bangladesh), clasificadas en cinco clases: conducción segura, giro, escribir en el teléfono, hablar por 
+teléfono y otros comportamientos riesgosos (por ejemplo, beber, voltear hacia atrás o somnolencia). 
+Reporten el número de imágenes por clase y su resolución. Lean el artículo de los autores y expliquen 
+cómo se construyó el conjunto, incluido cualquier aumento de datos aplicado antes de la publicación. 
+Tareas 
+1. Caso de uso. Describan quién recibe la alerta, en qué momento, qué acción desencadena y qué 
+restricciones impone el vehículo (cámara, cómputo disponible, latencia). 
+2. Análisis descriptivo. Analicen el balance de clases, la variabilidad de iluminación, ángulo y tipo de 
+vehículo, y la presencia de imágenes duplicadas o casi idénticas. Formulen hipótesis sobre qué 
+clases serán más difíciles de separar y por qué. 
+3. Partición sin fuga de información. Definan y justifiquen entrenamiento, validación y prueba. 
+Demuestren que no hay imágenes iguales o casi iguales (por ejemplo, versiones aumentadas de 
+una misma foto) en particiones distintas, y describan el método con que lo verificaron. 
+4. Modelo de referencia. Ajusten una regresión logística multinomial sobre características extraídas 
+por una red preentrenada congelada. 
+5. Redes neuronales. Construyan y comparen: (a) una red convolucional diseñada y entrenada por 
+ustedes desde cero, y (b) una red preentrenada con ajuste fino (transfer learning). Optimicen 
+arquitectura, aumento de datos, regularización, optimizador y tasa de aprendizaje con un método 
+de búsqueda justificado. 
+6. Evaluación. Reporten exactitud, F1 macro, precisión y sensibilidad por clase, y matriz de confusión 
+sobre el conjunto de prueba. Muestren al menos 10 imágenes bien clasificadas y 10 mal 
+clasificadas, y expliquen los errores. 
+7. Interpretabilidad. Usen un método justificado y citado (por ejemplo, Grad-CAM) para verificar en 
+qué regiones de la imagen se apoya el modelo. ¿Mira al conductor y al teléfono, o al fondo del 
+vehículo? 
+Preguntas de negocio 
+1. Política de alertas. Agrupen las clases en «sin alerta» y «con alerta» y justifiquen la agrupación. 
+¿Qué umbral de decisión usarían? Muestren cuántas falsas alarmas y cuántas distracciones no 
+detectadas habría por cada 1.000 imágenes con distintos umbrales, y elijan uno según el costo 
+relativo de cada error. 
+2. Generalización. Los datos provienen de otro país, de cámaras de celular y de condiciones de 
+tráfico distintas. Formulen hipótesis sobre cómo cambiaría el desempeño en una flota colombiana 
+y propongan cómo validarlo antes de una implementación real. 
+3. Medidas preventivas. Con base en las clases más frecuentes y los errores del modelo, ¿qué 
+medidas preventivas recomendarían a la empresa, además de la alerta? 
+Fundamentación matemática del módulo 
+• Operaciones de convolución, pooling y normalización por lotes. 
+• Función softmax y derivación de la entropía cruzada a partir de la verosimilitud multinomial. 
+• Formulación del ajuste fino y de las transformaciones de aumento de datos usadas. 
+• Definición de las métricas de clasificación y del método de interpretabilidad. 
+Figuras mínimas del módulo 
+• Distribución de imágenes por clase y por partición. 
+• Ejemplos representativos de cada clase. 
+• Matriz de confusión del mejor modelo en el conjunto de prueba. 
+• Falsas alarmas y distracciones no detectadas por debajo del umbral de alerta. 
+• Mapas de interpretabilidad (por ejemplo, Grad-CAM) sobre aciertos y errores. 
+ 
+Módulo 3: Recomendación de destinos de viaje 
+Como valor agregado para sus clientes, la empresa lanzará una línea de turismo internacional en alianza 
+con operadores turísticos, que comenzará con destinos en India. Quiere sugerir a cada cliente los 
+destinos que probablemente le interesen, a partir de datos históricos y de las preferencias de otros 
+usuarios. Una buena recomendación genera un viaje y fideliza al cliente a la marca; una mala hace que 
+ignore las siguientes. 
+Datos 
+Usarán el conjunto Travel Recommendation Dataset (India Travel Recommender System Dataset), 
+publicado en Kaggle por Aman Mehra (https://www.kaggle.com/datasets/amanmehra23/travel-
+recommendation-dataset). Reporten el número de usuarios, destinos e interacciones, la escala de las 
+calificaciones, la densidad de la matriz usuario–destino y las variables disponibles de usuarios y destinos. 
+Indiquen si los datos son reales o sintéticos, según la documentación de la fuente, y discutan qué implica 
+para sus conclusiones. 
+Tareas 
+1. Caso de uso. Describan en qué momento y en qué canal se muestra la recomendación, 
+cuántos destinos se muestran (K) y qué información del usuario está disponible en ese 
+momento. 
+2. Análisis descriptivo. Analicen la distribución de interacciones por usuario y por destino, 
+la concentración en los destinos populares y la proporción de usuarios con pocas 
+interacciones. Formulen hipótesis sobre qué explica las preferencias. 
+3. Partición. Definan y justifiquen cómo separan los conjuntos de entrenamiento, validación 
+y prueba (por ejemplo, por tiempo si hay fechas, o excluyendo interacciones por usuario). 
+Ninguna interacción de prueba puede usarse para entrenar. 
+4. Modelos de referencia. Ajusten una recomendación basada en popularidad y un filtrado 
+colaborativo clásico (vecinos más cercanos o factorización de matrices). 
+5. Red neuronal. Construyan y optimicen un recomendador neuronal (por ejemplo, un 
+modelo de filtrado colaborativo neuronal o un modelo de dos torres) que utilice, además 
+de las interacciones, al menos una variable de contenido del usuario o del destino. 
+Justifiquen la dimensión de los embeddings, el muestreo de negativos y la función de 
+pérdida. 
+6. Evaluación. Reporten Precision, Recall y NDCG@K, además de la cobertura del catálogo y 
+el desempeño separado para usuarios con pocas y muchas interacciones. Muestren las 
+recomendaciones para al menos 5 usuarios con perfiles distintos, junto con su historial, y 
+expliquen por qué tienen o no sentido. 
+Preguntas de negocio 
+1. Usuarios nuevos. ¿Qué recomendarían a un cliente sin historial? Comparen al menos dos 
+estrategias y cuantifiquen su desempeño simulando usuarios nuevos en el conjunto de prueba. 
+2. Concentración de la demanda. ¿Sus recomendaciones concentran a los clientes en pocos destinos 
+populares? Midan la concentración y discutan qué implicaría para la capacidad de las rutas si la 
+empresa siguiera esas recomendaciones. 
+3. Campaña. Si la empresa pudiera promocionar un solo destino este mes, ¿a qué grupo de usuarios 
+lo mostraría y cuántas conversiones esperaría según su modelo? Expliciten los supuestos. 
+Fundamentación matemática del módulo 
+• Formulación de la factorización de matrices y de la arquitectura de red neuronal usada. 
+• Derivación de la función de pérdida (por ejemplo, entropía cruzada binaria con muestreo de 
+negativos o BPR) a partir de un modelo probabilístico. 
+• Definición de Precision, Recall, NDCG y cobertura. 
+Figuras mínimas del módulo 
+• Distribución de interacciones por usuario y por destino (cola larga). 
+• Precision, Recall y NDCG en función de K, para cada modelo. 
+• Cobertura del catálogo y concentración de las recomendaciones en función de la popularidad de 
+los destinos. 
+• Proyección en dos dimensiones de los embeddings de los destinos (por ejemplo, con t-SNE o 
+UMAP), con interpretación de los grupos que aparezcan. 
+Aplicación web 
+Una aplicación publicada (link requerido) que integre los tres módulos, sea intuitiva para un usuario nuevo 
+e incluya enlaces al reporte técnico, al video promocional y video de contribuciones individuales. Como 
+mínimo debe permitir: 
+• Demanda y operación: elegir una ruta y ver el pronóstico a 30 días con su banda de incertidumbre, 
+la flota y los conductores requeridos, y cómo cambian al modificar al menos dos parámetros 
+operativos (por ejemplo, ocupación objetivo y cuantil usado). 
+• Conducción distractiva: subir una imagen y obtener la clase asignada, la probabilidad de cada 
+clase, la decisión de alerta según el umbral elegido y el mapa de interpretabilidad. 
+• Recomendación: elegir un usuario existente o crear un perfil nuevo y ver sus K destinos 
+recomendados junto con su historial. Debe tener un listado de preferencias para elegir y que esto 
+lleve a los recomendaciones de destinos de viaje. 
+La aplicación debe usar los modelos guardados, sin reentrenar, y poder levantarse localmente con un solo 
+comando. 
+Regla de comparación justa 
+En cada módulo, las redes neuronales se comparan con sus modelos de referencia bajo condiciones 
+explícitas y equivalentes: 
+• Mismos datos: todos los modelos de un módulo usan el mismo preprocesamiento y las mismas 
+particiones. 
+• Presupuesto de búsqueda explícito: reporten cuántas configuraciones entrenaron para cada 
+familia de modelos y el tiempo de cómputo total. Una arquitectura que «gana» tras 200 intentos 
+contra un modelo de referencia ajustado una sola vez no es una comparación justa sin esa 
+aclaración. 
+• Varias corridas independientes: entrenen la configuración final de cada red con al menos 30 
+semillas distintas y reporten media, desviación estándar, mejor y peor valor de cada métrica. 
+• Complejidad: reporten el número de parámetros entrenables de cada modelo. 
+Discusión 
+Para cada módulo: ¿qué aportó la red neuronal frente al modelo de referencia? Respondan con base en 
+las métricas, su variabilidad entre semillas, el costo de cómputo, la interpretabilidad y las consecuencias 
+para el negocio. Incluyan un listado de aprendizajes sobre cada problema que surgió del proceso de 
+modelamiento. 
+Entregables 
+1. Reporte técnico publicado como entrada de blog 
+El reporte debe contener el entendimiento desarrollado, la metodología seguida y justificada, los 
+resultados, las respuestas a las preguntas de negocio y la discusión de cada módulo. Se exige: 
+• Bibliografía en formato APA (7.ª edición). Todas las referencias deben existir, ser verificables y 
+estar citadas en el texto. Una referencia inexistente se penaliza. 
+• Figuras y tablas numeradas, con título y fuente, y todas citadas explícitamente en el texto. No se 
+aceptan figuras huérfanas. 
+• Fundamentación matemática común: definición de neurona artificial y de cada función de 
+activación utilizada; el algoritmo de backpropagation y las ecuaciones de actualización del 
+optimizador utilizado; la formulación de cada técnica de regularización. Además, la 
+fundamentación propia de cada módulo. 
+• Sección de ética: manejo de datos, privacidad de conductores y usuarios, sesgos de los conjuntos 
+de datos y riesgos de cada sistema si se implementara. 
+• Sección de uso de IA: los principales prompts utilizados y una discusión de su impacto en el 
+resultado final. 
+• Sección «Cacería de la alucinación». 
+• Enlaces al repositorio Git, a la aplicación web y al video promocional. 
+Figuras mínimas comunes, para cada red neuronal final de cada módulo (además de las figuras mínimas 
+propias de cada módulo): 
+• Diagrama de la arquitectura: capas, dimensiones de entrada y salida, funciones de activación y 
+número de parámetros entrenables. 
+• Curvas de aprendizaje: pérdida de entrenamiento y validación por época, señalando dónde actuó 
+la parada temprana. 
+• Resultados de la búsqueda de hiperparámetros: desempeño en validación de las configuraciones 
+probadas. 
+• Comparación entre modelos: la métrica principal de cada modelo con su variabilidad entre las 30 
+semillas (por ejemplo, diagramas de caja). 
+2. Repositorio Git reproducible 
+• README con instrucciones de instalación y ejecución, y una carpeta por módulo. 
+• Entorno especificado con versiones fijas (requirements.txt, environment.yml o similar). 
+• Semillas aleatorias fijas y documentadas. 
+• Los datos procesados que usan los modelos deben estar en el repositorio para que la ejecución 
+no dependa de internet ni de APIs externas. Si exceden los límites de tamaño, guarden una versión 
+procesada y comprimida, y documenten cómo se obtuvo. 
+• Modelos entrenados guardados, de modo que la aplicación y las figuras no requieran reentrenar. 
+• Figuras regenerables desde el código. 
+• Historial de commits que refleje el trabajo real del equipo. Un único commit al final no es 
+aceptable. 
+3. Todo debe correr en vivo 
+• Cada experimento principal de cada módulo debe lanzarse con un solo comando. 
+• Los parámetros (arquitectura, tasa de aprendizaje, regularización, épocas, cuantil, parámetros 
+operativos, umbral de alerta, K, etc.) deben poder cambiarse desde la línea de comandos o un 
+archivo de configuración, sin editar el código fuente. 
+• Una corrida de demostración de cada módulo debe tardar menos de dos minutos. Si el 
+entrenamiento completo tarda más, preparen un modo de demostración que se lance también 
+con un solo comando. 
+• Antes de la sustentación, prueben todo en un clon limpio del repositorio en una máquina distinta 
+a la de desarrollo. 
+4. Aplicación web 
+Según lo descrito en la sección Aplicación web. 
+5. Video promocional 
+Un video de 2 a 3 minutos que presente la aplicación como la solución a un problema de la empresa y 
+genere entusiasmo por usarla. 
+6. Videos de contribución individual 
+Cada integrante graba un video de 2 a 3 minutos en primera persona, hablando sobre sus aportes 
+específicos, con evidencia concreta: un fragmento de código que escribió, un commit, una figura que 
+elaboró o una sección del reporte que redactó, y una explicación breve de cómo funciona. Lo que cada 
+persona declare podrá ser preguntado en la sustentación. 
+Cacería de la alucinación 
+Las herramientas de IA producen errores que suenan convincentes. Su misión es cazarlos. Documenten al 
+menos cinco hallazgos en los que una IA generó algo incorrecto, impreciso, desactualizado o subóptimo 
+durante el trabajo, con al menos uno en cada módulo. Deben cubrir al menos tres de estas categorías: 
+• Matemáticas: derivadas, funciones de pérdida, fórmulas de métricas o del dimensionamiento de 
+flota. 
+• Código: errores de implementación, preprocesamiento defectuoso, fugas de información, 
+métricas mal calculadas. 
+• Datos del mundo real: significado de las variables, códigos DIVIPOLA, normativa de transporte, 
+características de los conjuntos de datos. 
+• Bibliografía: referencias inexistentes, autores o años equivocados, DOI que no resuelven. 
+• Conceptos: afirmaciones falsas sobre las redes neuronales, su entrenamiento o su desempeño 
+frente a métodos clásicos. 
+Para cada hallazgo, reporten: 
+1. El prompt utilizado (literal). 
+2. La parte relevante de la respuesta de la IA. 
+3. Cómo sospecharon que había un error. 
+4. La evidencia que lo demuestra: una derivación, un experimento o una fuente primaria. 
+5. La corrección. 
+6. La lección aprendida: ¿qué verificación habría evitado el error? 
+Si no logran encontrar los hallazgos requeridos, documenten las verificaciones que hicieron y sus 
+resultados. Un hallazgo inventado o sin evidencia se penaliza más que un hallazgo faltante. 
+Sustentación 
+Cada equipo tiene 10 minutos. El profesor escoge en el momento el módulo sobre el que se hace la 
+demostración y la modificación. 
+Momento Contenido 
+Demostración Ejecución en vivo de un experimento, con un solo 
+comando. 
+Modificación en vivo El profesor pide un cambio de parámetro o de 
+configuración. Antes de ejecutarlo, el equipo predice qué 
+ocurrirá y por qué. 
+Preguntas El profesor pregunta a cualquier integrante, escogido al 
+azar, sobre cualquier parte del trabajo, incluidas las 
+preguntas de negocio y lo declarado en los videos 
+individuales. 
+Todos los integrantes deben estar en capacidad de explicar todo el trabajo, no solo su parte. 
+ 
+Evaluación 
+Componente Peso Tipo 
+Reporte técnico (rigor, APA, figuras y tablas, preguntas de negocio, 
+discusión, ética) 
+20 % Grupal 
+Repositorio y reproducibilidad 5 % Grupal 
+Aplicación web 10 % Grupal 
+Componente Peso Tipo 
+Video promocional 5 % Grupal 
+Ejecución y modificación en vivo 10 % Grupal 
+Cacería de la alucinación 15 % Grupal 
+Video de contribución individual 5 % Individual 
+Respuestas en la sustentación 30 % Individual 
+La nota individual de la sustentación puede ajustar la nota grupal si un integrante no logra explicar un 
+componente que declaró como propio. 
