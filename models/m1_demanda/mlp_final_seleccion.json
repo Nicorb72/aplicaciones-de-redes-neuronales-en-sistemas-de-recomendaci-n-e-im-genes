@@ -1,0 +1,32 @@
+{
+  "familia": "mlp",
+  "config_final_rank": 1,
+  "semilla_guardada": 2026,
+  "n_configuraciones_final": 2,
+  "segundos_total": 479.9832666250004,
+  "hp": {
+    "window": 56,
+    "layers": 3,
+    "units": 128,
+    "regularization": {
+      "dropout": 0.053205957546914595,
+      "weight_decay": 9.085616637549491e-05
+    },
+    "lr": 0.0008538866010527678,
+    "batch_size": 64,
+    "epochs": 200,
+    "patience": 15,
+    "route_embedding_dim": 4,
+    "quantile": 0.9,
+    "quantile_weight": 1.0,
+    "optimizer": "adam",
+    "rnn": {
+      "cell": "gru",
+      "hidden": 32,
+      "layers": 1
+    },
+    "use_cal_hist": false,
+    "horizon": 30
+  },
+  "criterio": "menor MASE medio de validación entre 30 semillas; semilla de menor pérdida de validación"
+}

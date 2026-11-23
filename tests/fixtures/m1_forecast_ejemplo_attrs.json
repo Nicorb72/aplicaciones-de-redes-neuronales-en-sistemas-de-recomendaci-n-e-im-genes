@@ -1,0 +1,10 @@
+{
+  "modelo": "mlp",
+  "origen": "2026-03-31",
+  "ultimo_dato": "2026-03-30",
+  "flota_corredor": 183,
+  "plantilla_conductores": 328,
+  "advertencias": [],
+  "quantile": 0.9,
+  "nota": "Ejemplo del contrato de m1_demanda.predict.forecast('50001-11001', 0.9) con la red final (mlp). Regenerar si cambia el modelo o el contrato."
+}

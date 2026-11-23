@@ -1,0 +1,31 @@
+{
+  "familia": "rnn",
+  "config_final_rank": 1,
+  "semilla_guardada": 2046,
+  "n_configuraciones_final": 2,
+  "segundos_total": 2186.691165875003,
+  "hp": {
+    "window": 56,
+    "layers": 2,
+    "units": 64,
+    "regularization": {
+      "dropout": 0.06235648247158012,
+      "weight_decay": 1.012523502488203e-05
+    },
+    "lr": 0.0021950999417064626,
+    "batch_size": 256,
+    "epochs": 200,
+    "patience": 15,
+    "route_embedding_dim": 4,
+    "quantile": 0.9,
+    "quantile_weight": 1.0,
+    "optimizer": "adam",
+    "rnn": {
+      "cell": "gru",
+      "hidden": 64,
+      "layers": 2
+    },
+    "horizon": 30
+  },
+  "criterio": "menor MASE medio de validación entre 30 semillas; semilla de menor pérdida de validación"
+}

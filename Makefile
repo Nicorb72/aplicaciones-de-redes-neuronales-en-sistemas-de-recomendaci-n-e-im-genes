@@ -20,7 +20,7 @@ test-m1:
 	python -m pytest tests/test_m1_datos.py -q
 
 demo-m1:
-	python m1_demanda/run.py --mode demo
+	python -m m1_demanda.run --mode demo
 
 demo-m2:
 	python m2_conduccion/run.py --mode demo
@@ -29,7 +29,7 @@ demo-m3:
 	python m3_recomendacion/run.py --mode demo
 
 train-m1:
-	python m1_demanda/run.py --mode train
+	python -m m1_demanda.run --mode train
 
 train-m2:
 	python m2_conduccion/run.py --mode train

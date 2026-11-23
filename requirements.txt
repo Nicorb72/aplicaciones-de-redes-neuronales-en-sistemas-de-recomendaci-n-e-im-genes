@@ -11,3 +11,5 @@ pyyaml==6.0.4
 requests==2.34.2
 holidays==0.109   # solo para verificar el calendario de festivos propio
 pytest==9.2.0
+# --- Módulo 1: modelos y operación (Persona 2) ---
+torch==2.15.0   # versión instalada y probada en Python 3.12 (macOS arm64, MPS disponible)

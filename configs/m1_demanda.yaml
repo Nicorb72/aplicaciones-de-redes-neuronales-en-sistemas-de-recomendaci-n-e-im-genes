@@ -1,16 +1,112 @@
-# ventana:
-# capas:
-# unidades:
-# regularización:
-# optimizador:
-# lr:
-# cuantil:
-# epochs:
-window:
-layers:
-units:
+# =============================================================================
+# Módulo 1 — Modelos de pronóstico de demanda (Persona 2)
+# Se carga con common.config_loader.cargar_yaml: ningún valor puede quedar vacío.
+# Las claves en inglés (window, layers, units, ...) son las del esqueleto original.
+# Las particiones NO se definen aquí: salen de configs/m1_datos.yaml (Persona 1).
+# =============================================================================
+
+# --- Ventanas (m1_demanda/ventanas.py) --------------------------------------
+window: 28            # L: días de historia que ve el modelo (>= level_days; el EDA sugiere >= 28)
+horizon: 30           # H: días a pronosticar (debe coincidir con particiones.horizonte_dias)
+level_days: 28        # días previos al origen con los que se calcula el nivel local ℓ (offset)
+train_stride_days: 1  # paso entre orígenes de entrenamiento
+eval_stride_days: 7   # paso entre orígenes de validación/prueba (regla de split.py)
+
+# Variables de calendario (todas se conocen por ley/decreto con meses de anticipación).
+# dow_0..dow_6 son one-hot de dia_semana (0 = lunes), derivadas del calendario.
+calendar_features:
+  - festivo
+  - puente
+  - inicio_puente
+  - vispera_puente
+  - ultimo_dia_puente
+  - dia_despues_puente
+  - semana_santa
+  - receso_octubre
+  - vacaciones_mitad_anio
+  - vacaciones_fin_anio
+  - temporada_fin_anio
+  - temporada_alta
+  - eleccion
+  - fin_de_semana
+  - dias_hasta_festivo
+  - dias_desde_festivo
+  - dow_sin
+  - dow_cos
+  - doy_sin
+  - doy_cos
+  - dow_0
+  - dow_1
+  - dow_2
+  - dow_3
+  - dow_4
+  - dow_5
+  - dow_6
+calendar_day_cap: 30  # dias_hasta/desde_festivo se recortan a este valor y se dividen por él
+
+# Columnas que NUNCA pueden ser entrada del modelo: no se conocen 30 días antes del día
+# objetivo (o son banderas de la limpieza). Además se rechaza cualquier columna que
+# empiece por "despachos". La validación está en ventanas.validar_columnas_entrada.
+forbidden_inputs:
+  - evento_no_previsible
+  - particion
+  - imputado
+  - segmento
+  - pasajeros_crudo
+  - pasajeros_transito
+  - nombre_festivo
+  - nombre_eleccion
+  - falta_reporte_ruta
+  - atipico
+  - z_robusto
+
+mask:
+  exclude_unforeseeable_targets: true   # peso 0 a los días objetivo dentro del Paro Nacional 2021
+  exclude_unforeseeable_inputs: true    # descarta ventanas cuya historia toca el Paro Nacional
+  min_valid_targets: 1                  # mínimo de días objetivo observados para entrenar/evaluar
+
+# --- Modelo y entrenamiento por defecto (m1_demanda/nn_models.py, train.py) -----
+route_embedding_dim: 3
+layers: 2
+units: 64
 regularization:
-optimizer:
-lr:
-quantile:
-epochs:
+  dropout: 0.1
+  weight_decay: 1.0e-4
+optimizer: adam
+lr: 1.0e-3
+batch_size: 128
+epochs: 200
+patience: 15          # parada temprana sobre la pérdida de validación
+quantile: 0.9         # P90 (cuantil alto para dimensionar)
+quantile_weight: 1.0  # λ de L = L_Poisson + λ·L_pinball
+
+# --- Codificador recurrente (familia "rnn", m1_demanda/nn_models.py::RNNDemanda) ---
+# Usa también units (capa densa tras el codificador), route_embedding_dim y regularization.
+rnn:
+  cell: gru      # gru | lstm
+  hidden: 32     # tamaño del estado oculto
+  layers: 1      # capas recurrentes apiladas
+
+# --- Búsqueda de hiperparámetros (m1_demanda/search.py) ---------------------------------
+# Búsqueda ALEATORIA (Bergstra y Bengio, 2012): `budget` configuraciones por familia, UNA semilla cada una,
+# con parada temprana. Selección por MASE medio en VALIDACIÓN (orígenes semanales) con desempate por la
+# pérdida cuantílica escalada; nunca se mira la prueba. Las `top_k` mejores se corren luego con 30 semillas.
+# Distribuciones: choice (lista), uniform [a, b], loguniform [a, b].
+search:
+  budget: 30
+  top_k: 2
+  common:
+    window: {choice: [28, 56]}
+    units: {choice: [32, 64, 128]}
+    dropout: {uniform: [0.0, 0.3]}
+    weight_decay: {loguniform: [1.0e-6, 1.0e-3]}
+    lr: {loguniform: [3.0e-4, 1.0e-2]}
+    batch_size: {choice: [64, 128, 256]}
+    route_embedding_dim: {choice: [2, 3, 4]}
+  mlp:
+    layers: {choice: [1, 2, 3]}
+    use_cal_hist: {choice: [true, false]}
+  rnn:
+    cell: {choice: [gru, lstm]}
+    hidden: {choice: [16, 32, 64]}
+    rnn_layers: {choice: [1, 2]}

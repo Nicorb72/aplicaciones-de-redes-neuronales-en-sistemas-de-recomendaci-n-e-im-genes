@@ -1,12 +1,120 @@
-# capacidad por clase:
-# ocupación objetivo:
-# tiempo de ciclo:
-# jornada:
-# ausentismo:
-# costos:
+# =============================================================================
+# Módulo 1 — Operación: dimensionamiento de flota y conductores (Persona 2)
+#
+# Cada parámetro lleva su tipo:
+#   [F] fuente primaria o normativa. Cita y fecha de consulta (2026-11-22) en el comentario.
+#   [S] SUPUESTO declarado. No proviene de una fuente verificada; su efecto se mide en la
+#       sensibilidad de ±10 % (m1_demanda/operacion/sensitivity.py). Hay que reemplazarlo por
+#       datos de la empresa antes de usar el resultado para decidir en la realidad.
+#   [D] derivado de los datos de la Persona 1.
+#
+# Un valor [F] sin verificar se deja en `null` con el comentario "PENDIENTE: fuente"; el
+# código (m1_demanda/operacion/parametros.py) rechaza el archivo con un mensaje claro.
+# Los nombres en inglés (capacity_by_class, target_occupancy, ...) son los del esqueleto.
+# =============================================================================
+
+# --- Capacidad por clase de vehículo (sillas) -----------------------------------
+# [S] No se encontró una norma que fije las sillas por clase de vehículo de servicio
+# intermunicipal (el Decreto 1079 de 2015 no la define de forma verificada; consultado
+# 2026-11-22). Son órdenes de magnitud típicos. Las cotas de `max_pax_por_despacho` de
+# configs/m1_datos.yaml NO son normativas (solo detectan errores de digitación) y no se usan aquí.
 capacity_by_class:
-target_occupancy:
+  BUS: 40
+  BUSETA: 25
+  MICROBUS: 15
+  CAMIONETA: 8
+  CAMPERO: 6
+  AUTOMOVIL: 4
+
+# [D] Participación de cada clase en los despachos de cada ruta (SOLO periodo de entrenamiento).
+class_mix: data/m1_demanda/processed/mezcla_clase_vehiculo.csv
+
+# [S] Ocupación objetivo φ: fracción de las sillas que se planea llenar. Nota: el dato de origen
+# solo cuenta pasajeros que abordan en la terminal de origen (docs/m1_datos_y_eda.md, sec. 5), así
+# que con φ alto el modelo programa menos despachos de los que la empresa realmente hace.
+target_occupancy: 0.75
+
+# --- Tiempo de ciclo por corredor ------------------------------------------------
+# Claves = número de corredor de rutas.csv (1 Villavicencio–Bogotá, 2 Girardot–Bogotá,
+# 3 Pereira–Armenia, 4 Pasto–Ipiales, 5 Duitama–Sogamoso).
+#   viaje_h:        horas de viaje en UN sentido (ida y regreso se suponen iguales).
+#   alistamiento_h: horas de alistamiento/embarque/descanso en cada terminal extrema.
+# [S] viaje_h: NO verificado con fuente primaria. Se buscó una fuente pública (consultado 2026-11-22)
+# y solo aparecieron agregadores de viajes con valores poco creíbles (p. ej. Bogotá–Villavicencio
+# en 1 h 44 min); no se usaron. Son órdenes de magnitud para dimensionar. Reemplazar con los
+# tiempos de la programación de la empresa o con horarios de las terminales.
+# [S] alistamiento_h: supuesto.
+# Ciclo: T_c = 2·viaje_h + 2·alistamiento_h; ciclos por vehículo y día: ⌊operating_hours / T_c⌋.
 cycle_time:
+  1: {viaje_h: 3.5, alistamiento_h: 0.5}
+  2: {viaje_h: 3.0, alistamiento_h: 0.5}
+  3: {viaje_h: 1.0, alistamiento_h: 0.25}
+  4: {viaje_h: 2.0, alistamiento_h: 0.25}
+  5: {viaje_h: 0.75, alistamiento_h: 0.25}
+
+# [S] Horas diarias en que un vehículo puede operar.
+operating_hours: 18
+# [S] Reserva técnica de flota (mantenimiento, averías): fracción adicional sobre el pico.
+technical_reserve: 0.10
+
+# --- Jornada de los conductores ----------------------------------------------------
 workday:
-absenteeism:
+  # [F] Jornada máxima semanal por vigencia (se usa la que rige en el último día del horizonte,
+  # que es la más baja y por tanto la más exigente en número de conductores).
+  # Ley 2101 de 2021 (15-jul-2021), reducción gradual: 47 h desde el 15-jul-2023, 46 h desde el
+  # 15-jul-2024, 44 h desde el 15-jul-2025 y 42 h desde el 15-jul-2026. Antes: 48 h (Código
+  # Sustantivo del Trabajo, art. 161).
+  # Estado de verificación (2026-11-22): los escalones y fechas coinciden en 6 fuentes secundarias
+  # (funlam.edu.co, segurossura.com.co, elespectador.com 15-jul-2026, gerencie.com, hklaw.com,
+  # yahoo noticias). El texto oficial (funcionpublica.gov.co/eva/gestornormativo/norma.php?i=166506
+  # y secretariasenado.gov.co/senado/basedoc/ley_2101_2021.html) NO se pudo abrir desde este equipo
+  # (error de certificado / tiempo de espera). PENDIENTE: contrastar el art. 3 con el texto oficial.
+  jornada_semanal_h:
+    - {desde: "2021-01-01", horas: 48}
+    - {desde: "2023-07-15", horas: 47}
+    - {desde: "2024-07-15", horas: 46}
+    - {desde: "2025-07-15", horas: 44}
+    - {desde: "2026-07-15", horas: 42}
+  # [F, estándar internacional de referencia] Máximo de conducción por día: 9 h. Convenio 153 de la
+  # OIT (27-jun-1979), art. 6.1: "no deberá exceder de nueve horas por día ni de cuarenta y ocho horas
+  # por semana"; art. 5.1: máximo 4 h seguidas sin pausa (hasta 5 h si la autoridad lo autoriza).
+  # Texto: https://compilacionjuridica.antioquia.gov.co/compilacion/compilacion/docs/cv_oit_0153_79.htm
+  # La Circular 87 de 2026 (Ministerio de Transporte y Ministerio del Trabajo, 2-mar-2026) ordena a las
+  # empresas observar este convenio en límites de conducción y descansos, pero NO fija un número.
+  # OJO: en las listas de ratificaciones que se pudieron consultar (nueve Estados a 2022) no se
+  # confirmó a Colombia como ratificante; se usa como referencia, no como norma nacional verificada.
+  max_conduccion_dia_h: 9
+  # [F] Con corredores de más de 4 h de viaje se exigiría una pausa (art. 5.1 del Convenio 153).
+  max_conduccion_continua_h: 4
+  # [F] Descanso semanal obligatorio: Código Sustantivo del Trabajo, art. 172: el empleador debe dar un descanso
+  # dominical remunerado de duración mínima de 24 horas. Texto (compilación oficial del normograma de la Cancillería,
+  # consultado 2026-11-22): https://www.cancilleria.gov.co/sites/default/files/Normograma/docs/codigo_sustantivo_trabajo_pr006.htm
+  # Con descanso de 1 día por semana, un conductor está disponible como máximo 6 de cada 7 días. Se modela como
+  # `dias_trabajo_por_semana` = 6 (los servicios de transporte son una excepción habitual del descanso dominical, pero el
+  # descanso semanal rotativo de 24 h se mantiene). PENDIENTE: contrastar el artículo con el texto de la Secretaría del Senado.
+  dias_trabajo_por_semana: 6
+
+# [S] Ausentismo de conductores (incapacidades, permisos, vacaciones): fracción de la plantilla.
+absenteeism: 0.08
+
+# --- Costos (COP) --------------------------------------------------------------------
 costs:
+  # [F] Salario mínimo legal mensual 2026: $1.750.905. Decreto 1469 del 29-dic-2025 (fija el SMMLV de 2026);
+  # ratificado por el Decreto 0159 del 19-feb-2026 tras la suspensión del Consejo de Estado.
+  # Consultado 2026-11-22 en: hklaw.com (2025-12), soi.com.co, noticiascaracol.com, actualicese.com.
+  # PENDIENTE: contrastar con el texto del decreto en el Diario Oficial.
+  smmlv: 1750905
+  # [S] Carga prestacional y de seguridad social sobre el salario (cesantías, prima, vacaciones, aportes).
+  # El costo mensual de un conductor es c_cond = smmlv · (1 + carga_prestacional). Se asume un conductor
+  # con salario mínimo; en la realidad suele ganar más.
+  carga_prestacional: 0.52
+  # [S] Costo diario de tener un vehículo en operación (arriendo/depreciación, seguro, mantenimiento).
+  c_veh_dia: 250000
+  # [S] Costo variable de cada despacho ejecutado (combustible, peajes, tasa de uso de terminal).
+  c_despacho: 180000
+  # [S] Costo de un pasajero no atendido (ingreso perdido por falta de capacidad).
+  c_no_atendido: 30000
+
+# [S] Variación de la sensibilidad (±10 % del enunciado).
+sensitivity:
+  delta: 0.10

@@ -1,0 +1,66 @@
+{
+  "familia": "rnn",
+  "hp": {
+    "window": 28,
+    "layers": 2,
+    "units": 64,
+    "regularization": {
+      "dropout": 0.1,
+      "weight_decay": 0.0001
+    },
+    "lr": 0.001,
+    "batch_size": 128,
+    "epochs": 200,
+    "patience": 15,
+    "route_embedding_dim": 3,
+    "quantile": 0.9,
+    "quantile_weight": 1.0,
+    "optimizer": "adam",
+    "rnn": {
+      "cell": "gru",
+      "hidden": 32,
+      "layers": 1
+    },
+    "horizon": 30
+  },
+  "n_cal": 27,
+  "nombres_cal": [
+    "festivo",
+    "puente",
+    "inicio_puente",
+    "vispera_puente",
+    "ultimo_dia_puente",
+    "dia_despues_puente",
+    "semana_santa",
+    "receso_octubre",
+    "vacaciones_mitad_anio",
+    "vacaciones_fin_anio",
+    "temporada_fin_anio",
+    "temporada_alta",
+    "eleccion",
+    "fin_de_semana",
+    "dias_hasta_festivo",
+    "dias_desde_festivo",
+    "dow_sin",
+    "dow_cos",
+    "doy_sin",
+    "doy_cos",
+    "dow_0",
+    "dow_1",
+    "dow_2",
+    "dow_3",
+    "dow_4",
+    "dow_5",
+    "dow_6"
+  ],
+  "meta": {
+    "familia": "rnn",
+    "semilla": 2026,
+    "dispositivo": "cpu",
+    "mejor_epoca": 74,
+    "mejor_val_perdida": 1.008407895578832,
+    "epocas_corridas": 89,
+    "n_parametros": 64026,
+    "segundos_entrenamiento": 21.645496082986938
+  }
+}

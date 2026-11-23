@@ -1,6 +1,16 @@
-# semilla:
-# rutas:
-# número de semillas: 30
-seed:
-num_seeds:
+# Configuración global compartida por los tres módulos.
+# seed: semilla base. Las 30 semillas del enunciado son seed, seed+1, ..., seed+num_seeds-1.
+seed: 2026
+num_seeds: 30
+# Dispositivo por defecto: cpu | mps | cuda | auto. CPU, con evidencia medida (Mac M4, torch 2.15.0,
+# MLP de 110 362 parámetros, `python -m m1_demanda.benchmark_dispositivo`, reports/tables/m1_benchmark_dispositivo.csv):
+#   cpu: 88 ms/época y dos corridas con la misma semilla dan resultados idénticos (diferencia 0).
+#   mps: 260 ms/época (3 veces más lento) y la misma semilla NO se reproduce (embedding_dense_backward_mps
+#        no tiene versión determinista), con diferencias de hasta 59 % frente a CPU.
+# Los modelos son pequeños, así que la GPU no compensa. Con --device mps se puede forzar.
+device: cpu
 paths:
+  data: data
+  models: models
+  figures: reports/figures
+  tables: reports/tables
