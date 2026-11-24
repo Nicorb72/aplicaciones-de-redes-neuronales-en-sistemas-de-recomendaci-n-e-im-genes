@@ -1,7 +1,6 @@
 
 """
 Módulo 3: Visualización de embeddings.
-Responsable: Persona 4.
 
 - t-SNE de embeddings de usuarios.
 - PCA de embeddings de destinos.
@@ -19,10 +18,10 @@ import matplotlib.pyplot as plt
 
 from sklearn.manifold import TSNE
 
-from m3_recomendacion.train import NeuralRecommendationSystem
+from m3_recomendacion.experiments.train import NeuralRecommendationSystem
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 PROCESSED = ROOT / "data" / "m3_recomendacion" / "processed"
 RAW = ROOT / "data" / "m3_recomendacion" / "raw"
 FIGURES = ROOT / "reports" / "figures" / "m3"

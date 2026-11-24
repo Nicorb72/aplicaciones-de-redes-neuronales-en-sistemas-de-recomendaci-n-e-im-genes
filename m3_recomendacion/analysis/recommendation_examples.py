@@ -1,6 +1,6 @@
 
 """
-Persona 4: cinco ejemplos de recomendaciones.
+Cinco ejemplos de recomendaciones.
 
 Utiliza únicamente usuarios conocidos en entrenamiento.
 No utiliza las particiones de validación o prueba
@@ -11,10 +11,10 @@ from pathlib import Path
 
 import pandas as pd
 
-from m3_recomendacion.train import NeuralRecommendationSystem
+from m3_recomendacion.experiments.train import NeuralRecommendationSystem
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 PROCESSED = ROOT / "data" / "m3_recomendacion" / "processed"
 RAW = ROOT / "data" / "m3_recomendacion" / "raw"
 

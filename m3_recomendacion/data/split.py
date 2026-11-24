@@ -1,7 +1,6 @@
 
 """
 Módulo 3: Diagnóstico previo a la partición de datos.
-Responsable: Persona 4.
 
 Objetivo:
 Determinar qué usuarios pueden participar en entrenamiento,

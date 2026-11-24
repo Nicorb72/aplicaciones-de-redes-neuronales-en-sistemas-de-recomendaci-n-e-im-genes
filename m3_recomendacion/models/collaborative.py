@@ -6,7 +6,7 @@ Factorización de matrices implementada con PyTorch.
 Entrenamiento sobre interacciones observadas.
 """
 
-from m3_recomendacion.evaluate import (
+from m3_recomendacion.evaluation.evaluate import (
     evaluar_modelo,
     evaluar_varios_k
 )
@@ -20,7 +20,7 @@ import torch
 from torch import nn
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 PROCESSED = ROOT / "data" / "m3_recomendacion" / "processed"
 
 

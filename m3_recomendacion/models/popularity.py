@@ -16,7 +16,7 @@ import pandas as pd
 import torch
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 PROCESSED = ROOT / "data" / "m3_recomendacion" / "processed"
 
 

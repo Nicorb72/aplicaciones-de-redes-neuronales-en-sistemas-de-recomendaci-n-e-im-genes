@@ -1,0 +1,41 @@
+{
+  "format_version": 1,
+  "source": "train.csv: interacciones positivas observadas",
+  "catalogo_item_ids": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "global_counts": {
+    "1": 87,
+    "2": 79,
+    "3": 83,
+    "4": 92,
+    "5": 85
+  },
+  "profile_counts": {
+    "Beaches, Historical": {
+      "1": 31,
+      "2": 31,
+      "3": 25,
+      "4": 37,
+      "5": 38
+    },
+    "City, Historical": {
+      "1": 26,
+      "2": 26,
+      "3": 32,
+      "4": 25,
+      "5": 22
+    },
+    "Nature, Adventure": {
+      "1": 30,
+      "2": 22,
+      "3": 26,
+      "4": 30,
+      "5": 25
+    }
+  }
+}

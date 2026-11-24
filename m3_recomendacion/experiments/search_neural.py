@@ -15,11 +15,11 @@ import argparse
 import pandas as pd
 import torch
 
-from m3_recomendacion.train import NeuralRecommendationSystem
-from m3_recomendacion.evaluate import evaluar_modelo
+from m3_recomendacion.experiments.train import NeuralRecommendationSystem
+from m3_recomendacion.evaluation.evaluate import evaluar_modelo
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 PROCESSED = ROOT / "data" / "m3_recomendacion" / "processed"
 RAW = ROOT / "data" / "m3_recomendacion" / "raw"
 

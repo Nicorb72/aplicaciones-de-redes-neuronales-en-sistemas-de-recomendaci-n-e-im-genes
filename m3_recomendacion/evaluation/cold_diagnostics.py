@@ -10,10 +10,10 @@ from pathlib import Path
 import math
 import pandas as pd
 
-from m3_recomendacion.cold_start import ColdStartRecommender
+from m3_recomendacion.models.cold_start import ColdStartRecommender
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 PROCESSED = ROOT / "data" / "m3_recomendacion" / "processed"
 RAW = ROOT / "data" / "m3_recomendacion" / "raw"
 

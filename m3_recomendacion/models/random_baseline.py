@@ -16,13 +16,13 @@ import argparse
 import pandas as pd
 import torch
 
-from m3_recomendacion.evaluate import (
+from m3_recomendacion.evaluation.evaluate import (
     evaluar_modelo,
     evaluar_varios_k
 )
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 PROCESSED = ROOT / "data" / "m3_recomendacion" / "processed"
 
 

@@ -1,7 +1,6 @@
 
 """
 Módulo 3: Sistema de recomendación de destinos turísticos.
-Responsable: Persona 4.
 
 Objetivo:
 Cargar y explorar los datos originales del Travel Recommendation Dataset.

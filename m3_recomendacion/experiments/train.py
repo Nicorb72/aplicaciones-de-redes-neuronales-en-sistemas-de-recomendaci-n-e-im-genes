@@ -28,15 +28,15 @@ import torch
 from torch import nn
 import matplotlib.pyplot as plt
 
-from m3_recomendacion.neural_recommender import NeuralRecommender
-from m3_recomendacion.evaluate import evaluar_modelo
+from m3_recomendacion.models.neural_recommender import NeuralRecommender
+from m3_recomendacion.evaluation.evaluate import evaluar_modelo
 
 
 # ============================================================
 # 1. RUTAS
 # ============================================================
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 PROCESSED = (
     ROOT / "data" / "m3_recomendacion" / "processed"

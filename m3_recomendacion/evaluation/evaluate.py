@@ -17,14 +17,14 @@ import math
 
 import pandas as pd
 
-from m3_recomendacion.popularity import PopularityRecommender
+from m3_recomendacion.models.popularity import PopularityRecommender
 
 
 # ============================================================
 # 1. RUTAS DEL PROYECTO
 # ============================================================
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 PROCESSED = (
     ROOT / "data" / "m3_recomendacion" / "processed"

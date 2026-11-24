@@ -1,7 +1,6 @@
 
 """
 Módulo 3: Preparación inicial del sistema de recomendación.
-Responsable: Persona 4.
 
 Genera:
 1. Catálogo consolidado de destinos.

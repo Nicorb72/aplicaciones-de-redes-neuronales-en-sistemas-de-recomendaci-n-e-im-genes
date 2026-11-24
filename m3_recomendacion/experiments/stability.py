@@ -12,13 +12,13 @@ import argparse
 
 import pandas as pd
 
-from m3_recomendacion.collaborative import (
+from m3_recomendacion.models.collaborative import (
     CollaborativeRecommender
 )
-from m3_recomendacion.evaluate import evaluar_modelo
+from m3_recomendacion.evaluation.evaluate import evaluar_modelo
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 PROCESSED = ROOT / "data" / "m3_recomendacion" / "processed"
 
 

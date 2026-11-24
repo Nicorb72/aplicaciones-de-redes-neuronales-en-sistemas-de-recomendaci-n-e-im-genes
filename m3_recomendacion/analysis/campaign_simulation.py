@@ -1,6 +1,6 @@
 
 """
-Persona 4: simulación comercial de una campaña.
+simulación comercial de una campaña.
 
 Escenario:
 Promocionar Kerala Backwaters entre usuarios del perfil
@@ -15,10 +15,10 @@ from math import ceil
 
 import pandas as pd
 
-from m3_recomendacion.train import NeuralRecommendationSystem
+from m3_recomendacion.experiments.train import NeuralRecommendationSystem
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 PROCESSED = ROOT / "data" / "m3_recomendacion" / "processed"
 RAW = ROOT / "data" / "m3_recomendacion" / "raw"
 

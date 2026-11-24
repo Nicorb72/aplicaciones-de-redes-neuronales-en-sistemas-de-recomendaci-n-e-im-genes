@@ -32,17 +32,17 @@ from pathlib import Path
 
 import pandas as pd
 
-from m3_recomendacion.popularity import PopularityRecommender
-from m3_recomendacion.collaborative import CollaborativeRecommender
-from m3_recomendacion.train import NeuralRecommendationSystem
-from m3_recomendacion.evaluate import evaluar_modelo
+from m3_recomendacion.models.popularity import PopularityRecommender
+from m3_recomendacion.models.collaborative import CollaborativeRecommender
+from m3_recomendacion.experiments.train import NeuralRecommendationSystem
+from m3_recomendacion.evaluation.evaluate import evaluar_modelo
 
 
 # ============================================================
 # 1. RUTAS
 # ============================================================
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 
 PROCESSED = (
     ROOT / "data" / "m3_recomendacion" / "processed"

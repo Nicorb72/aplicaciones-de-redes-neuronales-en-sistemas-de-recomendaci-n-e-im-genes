@@ -13,10 +13,10 @@ from pathlib import Path
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from m3_recomendacion.train import NeuralRecommendationSystem
+from m3_recomendacion.experiments.train import NeuralRecommendationSystem
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 PROCESSED = ROOT / "data" / "m3_recomendacion" / "processed"
 RAW = ROOT / "data" / "m3_recomendacion" / "raw"
 FIGURES = ROOT / "reports" / "figures" / "m3"
