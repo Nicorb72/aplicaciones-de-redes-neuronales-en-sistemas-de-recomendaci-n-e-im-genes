@@ -1,0 +1,230 @@
+[
+  {
+    "family": "logreg",
+    "C": 0.01,
+    "val_f1": 0.2758574510665294
+  },
+  {
+    "family": "logreg",
+    "C": 0.1,
+    "val_f1": 0.2855559076884504
+  },
+  {
+    "family": "logreg",
+    "C": 1.0,
+    "val_f1": 0.27538957622675225
+  },
+  {
+    "family": "scratch",
+    "trial": 1,
+    "parameters": {
+      "optimizer": "adamw",
+      "lr": 0.001,
+      "decay": 0.0001,
+      "dropout": 0.25,
+      "augmentation": "mild",
+      "width": 24,
+      "depth": 3
+    },
+    "val_f1": 0.2542603500730436,
+    "history": [
+      {
+        "epoch": 1,
+        "loss": 1.3644018364690846,
+        "val_f1": 0.22961115933939147
+      },
+      {
+        "epoch": 2,
+        "loss": 0.9630007016103204,
+        "val_f1": 0.2542603500730436
+      }
+    ]
+  },
+  {
+    "family": "scratch",
+    "trial": 2,
+    "parameters": {
+      "optimizer": "adamw",
+      "lr": 0.001,
+      "decay": 0.001,
+      "dropout": 0.4,
+      "augmentation": "medium",
+      "width": 16,
+      "depth": 3
+    },
+    "val_f1": 0.29298162549467544,
+    "history": [
+      {
+        "epoch": 1,
+        "loss": 1.4635770795730174,
+        "val_f1": 0.20474937158579332
+      },
+      {
+        "epoch": 2,
+        "loss": 1.2307295760806962,
+        "val_f1": 0.29298162549467544
+      }
+    ]
+  },
+  {
+    "family": "scratch",
+    "trial": 3,
+    "parameters": {
+      "optimizer": "sgd",
+      "lr": 0.03,
+      "decay": 0.001,
+      "dropout": 0.4,
+      "augmentation": "mild",
+      "width": 32,
+      "depth": 4
+    },
+    "val_f1": 0.21658296787783385,
+    "history": [
+      {
+        "epoch": 1,
+        "loss": 1.9398386908277276,
+        "val_f1": 0.17785330635138202
+      },
+      {
+        "epoch": 2,
+        "loss": 0.9152297533206297,
+        "val_f1": 0.21658296787783385
+      }
+    ]
+  },
+  {
+    "family": "scratch",
+    "trial": 4,
+    "parameters": {
+      "optimizer": "adamw",
+      "lr": 0.0003,
+      "decay": 0.001,
+      "dropout": 0.1,
+      "augmentation": "none",
+      "width": 24,
+      "depth": 3
+    },
+    "val_f1": 0.25017338262970323,
+    "history": [
+      {
+        "epoch": 1,
+        "loss": 1.4088024440801368,
+        "val_f1": 0.22220145465134927
+      },
+      {
+        "epoch": 2,
+        "loss": 1.1015726766592455,
+        "val_f1": 0.25017338262970323
+      }
+    ]
+  },
+  {
+    "family": "transfer",
+    "trial": 1,
+    "parameters": {
+      "optimizer": "adamw",
+      "lr": 0.001,
+      "decay": 0.0001,
+      "dropout": 0.25,
+      "augmentation": "mild",
+      "unfreeze": [
+        "layer4"
+      ]
+    },
+    "val_f1": 0.27460799547217896,
+    "history": [
+      {
+        "epoch": 1,
+        "loss": 1.112028232045259,
+        "val_f1": 0.26681822715120396
+      },
+      {
+        "epoch": 2,
+        "loss": 0.46197957599226497,
+        "val_f1": 0.27460799547217896
+      }
+    ]
+  },
+  {
+    "family": "transfer",
+    "trial": 2,
+    "parameters": {
+      "optimizer": "adamw",
+      "lr": 0.001,
+      "decay": 0.001,
+      "dropout": 0.4,
+      "augmentation": "medium",
+      "unfreeze": [
+        "layer4"
+      ]
+    },
+    "val_f1": 0.278568910931447,
+    "history": [
+      {
+        "epoch": 1,
+        "loss": 1.2063837000543582,
+        "val_f1": 0.2501997146951394
+      },
+      {
+        "epoch": 2,
+        "loss": 0.6082465547820173,
+        "val_f1": 0.278568910931447
+      }
+    ]
+  },
+  {
+    "family": "transfer",
+    "trial": 3,
+    "parameters": {
+      "optimizer": "adamw",
+      "lr": 0.003,
+      "decay": 0.001,
+      "dropout": 0.4,
+      "augmentation": "mild",
+      "unfreeze": [
+        "layer3",
+        "layer4"
+      ]
+    },
+    "val_f1": 0.03764705882352941,
+    "history": [
+      {
+        "epoch": 1,
+        "loss": 1.6283631996077272,
+        "val_f1": 0.03764705882352941
+      },
+      {
+        "epoch": 2,
+        "loss": 1.6081334552425008,
+        "val_f1": 0.03764705882352941
+      }
+    ]
+  },
+  {
+    "family": "transfer",
+    "trial": 4,
+    "parameters": {
+      "optimizer": "sgd",
+      "lr": 0.003,
+      "decay": 1e-05,
+      "dropout": 0.4,
+      "augmentation": "none",
+      "unfreeze": [
+        "layer4"
+      ]
+    },
+    "val_f1": 0.31426840346450985,
+    "history": [
+      {
+        "epoch": 1,
+        "loss": 1.1096634083247112,
+        "val_f1": 0.2922918399050386
+      },
+      {
+        "epoch": 2,
+        "loss": 0.4109822999871636,
+        "val_f1": 0.31426840346450985
+      }
+    ]
+  }
+]

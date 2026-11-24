@@ -1,0 +1,12 @@
+# Entorno independiente del módulo 2, Python 3.12
+torch==2.6.0
+torchvision==0.21.0
+numpy==1.26.4
+pandas==2.2.3
+scipy==1.14.1
+scikit-learn==1.5.2
+matplotlib==3.9.2
+pillow==10.4.0
+PyYAML==6.0.2
+streamlit==1.40.2
+pytest==8.3.3

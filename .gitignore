@@ -5,3 +5,10 @@ venv/
 .env
 *.log
 .ipynb_checkpoints/
+data/m2_conduccion/raw/*
+!data/m2_conduccion/raw/.gitkeep
+data/m2_conduccion/processed/*
+!data/m2_conduccion/processed/.gitkeep
+models/m2_conduccion/*.pth
+models/m2_conduccion/*.pt
+models/m2_conduccion/best.tmp

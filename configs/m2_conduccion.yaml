@@ -1,12 +1,14 @@
-# arquitectura:
-# aumento de datos:
-# lr:
-# epochs:
-# umbral de alerta:
-# agrupación de clases:
-architecture:
-data_augmentation:
-lr:
-epochs:
-alert_threshold:
+seed: 2026
+split: [0.70, 0.15, 0.15]
+hash_distance: 7
+image_size: 112
+batch_size: 64
+epochs: 2
+search_trials: 4
+threads: 6
+false_alarm_cost: 1
+miss_cost: 5
+default_threshold: 0.1666666667
 class_grouping:
+  sin_alerta: [segura, giro]
+  con_alerta: [escribir, hablar, otros]

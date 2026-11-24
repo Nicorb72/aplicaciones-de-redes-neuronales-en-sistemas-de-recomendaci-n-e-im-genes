@@ -1,0 +1,11 @@
+{
+  "images": 7276,
+  "exact_redundant_files": 0,
+  "perceptual_pairs": 126998,
+  "hash_distance": 7,
+  "groups": 544,
+  "largest_group": 6188,
+  "groups_with_conflicting_labels": 51,
+  "cross_split_matches": 0,
+  "unreadable_images": 10
+}

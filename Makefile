@@ -23,7 +23,11 @@ demo-m1:
 	python -m m1_demanda.run --mode demo
 
 demo-m2:
-	python m2_conduccion/run.py --mode demo
+	python -m m2_conduccion.run --mode demo
+
+.PHONY: data-m2
+data-m2:
+	python -m m2_conduccion.run --mode data --download
 
 demo-m3:
 	python m3_recomendacion/run.py --mode demo
@@ -32,7 +36,7 @@ train-m1:
 	python -m m1_demanda.run --mode train
 
 train-m2:
-	python m2_conduccion/run.py --mode train
+	python -m m2_conduccion.run --mode train --reuse-data
 
 train-m3:
 	python m3_recomendacion/run.py --mode train
