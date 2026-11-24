@@ -9,6 +9,9 @@ data/m2_conduccion/raw/*
 !data/m2_conduccion/raw/.gitkeep
 data/m2_conduccion/processed/*
 !data/m2_conduccion/processed/.gitkeep
+!data/m2_conduccion/processed/coincidencias.csv
+!data/m2_conduccion/processed/imagenes_112.npy
+!data/m2_conduccion/processed/manifest.csv
 models/m2_conduccion/*.pth
 models/m2_conduccion/*.pt
 models/m2_conduccion/best.tmp
