@@ -14,4 +14,5 @@ data/m2_conduccion/processed/*
 !data/m2_conduccion/processed/manifest.csv
 models/m2_conduccion/*.pth
 models/m2_conduccion/*.pt
+!models/m2_conduccion/best.pt
 models/m2_conduccion/best.tmp
