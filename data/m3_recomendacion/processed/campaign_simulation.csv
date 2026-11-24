@@ -1,0 +1,4 @@
+Escenario,UsuariosIntervenidos,TasaBase,TasaPromocion,ConversionesBaseEsperadas,ConversionesPromocionEsperadas,ConversionesIncrementalesEsperadas
+Conservador,10,0.01,0.02,0.1,0.2,0.1
+Intermedio,10,0.01,0.03,0.1,0.3,0.19999999999999998
+Optimista,10,0.01,0.05,0.1,0.5,0.4

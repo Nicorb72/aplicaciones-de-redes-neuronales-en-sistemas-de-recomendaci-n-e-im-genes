@@ -1,0 +1,10 @@
+UserID,Preferencias,Relevantes,RankingGlobal,RankingPreferencias,NDCG_Global,NDCG_Preferencias,Diferencia
+56,"Nature, Adventure",[1],"[np.int64(4), np.int64(1), np.int64(5)]","[np.int64(4), np.int64(1), np.int64(3)]",0.6309297535714575,0.6309297535714575,0.0
+58,"Beaches, Historical",[5],"[np.int64(4), np.int64(1), np.int64(5)]","[np.int64(5), np.int64(4), np.int64(1)]",0.5,1.0,0.5
+98,"Nature, Adventure",[1],"[np.int64(4), np.int64(1), np.int64(5)]","[np.int64(4), np.int64(1), np.int64(3)]",0.6309297535714575,0.6309297535714575,0.0
+197,"Nature, Adventure",[5],"[np.int64(4), np.int64(1), np.int64(5)]","[np.int64(4), np.int64(1), np.int64(3)]",0.5,0.0,-0.5
+447,"City, Historical",[5],"[np.int64(4), np.int64(1), np.int64(5)]","[np.int64(3), np.int64(1), np.int64(2)]",0.5,0.0,-0.5
+494,"Nature, Adventure","[3, 4]","[np.int64(4), np.int64(1), np.int64(5)]","[np.int64(4), np.int64(1), np.int64(3)]",0.6131471927654584,0.9197207891481876,0.3065735963827292
+595,"Beaches, Historical",[2],"[np.int64(4), np.int64(1), np.int64(5)]","[np.int64(5), np.int64(4), np.int64(1)]",0.0,0.0,0.0
+621,"City, Historical","[3, 5]","[np.int64(4), np.int64(1), np.int64(5)]","[np.int64(3), np.int64(1), np.int64(2)]",0.3065735963827292,0.6131471927654584,0.3065735963827292
+680,"Nature, Adventure",[2],"[np.int64(4), np.int64(1), np.int64(5)]","[np.int64(4), np.int64(1), np.int64(3)]",0.0,0.0,0.0

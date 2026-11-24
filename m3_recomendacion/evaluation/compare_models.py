@@ -1,7 +1,6 @@
 
 """
 Módulo 3: Comparación de estabilidad de modelos.
-Responsable: Persona 4.
 
 Genera una figura comparativa de NDCG@3
 a partir de los experimentos existentes.

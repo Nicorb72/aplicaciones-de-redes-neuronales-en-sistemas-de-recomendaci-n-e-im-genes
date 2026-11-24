@@ -1,7 +1,6 @@
 
 """
 Módulo 3: Recomendador neuronal.
-Responsable: Persona 4.
 
 Arquitectura:
 - Embeddings de usuarios y destinos.

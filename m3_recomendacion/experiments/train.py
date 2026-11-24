@@ -2,22 +2,19 @@
 """
 Módulo 3: Entrenamiento del recomendador neuronal.
 
-Arquitectura:
+Incluye:
 - Embeddings de usuarios y destinos.
-- Preferencias declaradas del usuario.
-- Tipo turístico del destino.
-- Perceptrón multicapa (MLP).
-
-Entrenamiento:
-- PyTorch.
-- Adam.
-- BCEWithLogitsLoss.
+- Preferencias del usuario y tipos turísticos.
+- Entrenamiento con PyTorch.
+- Función de pérdida BCEWithLogitsLoss.
+- Muestreo opcional de negativos observados.
 - Early stopping basado en NDCG@K.
 - Recuperación de los mejores pesos.
+- Evaluación en validación.
+- Exportación del historial de entrenamiento.
+- Gráficas de pérdida y NDCG.
 
-Se entrena exclusivamente con train.csv.
-La selección de pesos utiliza val.csv.
-No se utiliza test.csv.
+No utiliza el conjunto de prueba para entrenamiento.
 """
 
 from pathlib import Path
@@ -25,19 +22,18 @@ from copy import deepcopy
 import argparse
 import random
 
-import matplotlib.pyplot as plt
-
 import numpy as np
 import pandas as pd
 import torch
 from torch import nn
+import matplotlib.pyplot as plt
 
 from m3_recomendacion.neural_recommender import NeuralRecommender
 from m3_recomendacion.evaluate import evaluar_modelo
 
 
 # ============================================================
-# 1. RUTAS DEL PROYECTO
+# 1. RUTAS
 # ============================================================
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -48,6 +44,10 @@ PROCESSED = (
 
 RAW = (
     ROOT / "data" / "m3_recomendacion" / "raw"
+)
+
+FIGURES = (
+    ROOT / "reports" / "figures" / "m3"
 )
 
 
@@ -65,7 +65,8 @@ class NeuralRecommendationSystem:
         lr=0.001,
         epochs=100,
         seed=42,
-        patience=15
+        patience=15,
+        negative_ratio=None
     ):
 
         self.embedding_dim = embedding_dim
@@ -75,6 +76,7 @@ class NeuralRecommendationSystem:
         self.epochs = epochs
         self.seed = seed
         self.patience = patience
+        self.negative_ratio = negative_ratio
 
         self.model = None
 
@@ -96,9 +98,12 @@ class NeuralRecommendationSystem:
         self.best_epoch = None
         self.best_ndcg = None
 
+        self.n_train_positivos = None
+        self.n_train_negativos = None
+
 
     # ========================================================
-    # 3. PREPARACIÓN DE VARIABLES
+    # 3. PREPARAR USUARIOS, DESTINOS Y MODELO
     # ========================================================
 
     def preparar(self, train, catalogo, usuarios):
@@ -111,7 +116,7 @@ class NeuralRecommendationSystem:
         }
 
         self.item_ids = sorted(
-            catalogo["ItemID"].astype(int)
+            catalogo["ItemID"].astype(int).tolist()
         )
 
         self.item_map = {
@@ -151,7 +156,10 @@ class NeuralRecommendationSystem:
             )
         )
 
-        # Destinos observados en entrenamiento.
+        # IMPORTANTE:
+        # El historial se obtiene del train COMPLETO.
+        # No se construye sobre la muestra utilizada
+        # para calcular la función de pérdida.
         self.historial = (
             train.groupby("UserID")["ItemID"]
             .apply(
@@ -160,7 +168,6 @@ class NeuralRecommendationSystem:
             .to_dict()
         )
 
-        # Construir arquitectura neuronal.
         self.model = NeuralRecommender(
             n_users=len(self.user_map),
             n_items=len(self.item_map),
@@ -173,7 +180,7 @@ class NeuralRecommendationSystem:
 
 
     # ========================================================
-    # 4. CODIFICACIÓN DE ENTRADAS
+    # 4. CODIFICAR ENTRADAS
     # ========================================================
 
     def codificar(self, user_ids, item_ids):
@@ -202,14 +209,12 @@ class NeuralRecommendationSystem:
             dtype=torch.long
         )
 
-        # Preferencias en formato one-hot.
         prefs = torch.zeros(
             len(user_ids),
             len(self.pref_map),
             dtype=torch.float32
         )
 
-        # Tipos turísticos en formato one-hot.
         types = torch.zeros(
             len(item_ids),
             len(self.type_map),
@@ -238,7 +243,101 @@ class NeuralRecommendationSystem:
 
 
     # ========================================================
-    # 5. ENTRENAMIENTO CON EARLY STOPPING
+    # 5. MUESTREO DE NEGATIVOS OBSERVADOS
+    # ========================================================
+
+    def preparar_muestra_entrenamiento(self, train):
+
+        # Si no se solicita muestreo,
+        # se conservan todas las interacciones observadas.
+        if self.negative_ratio is None:
+
+            train_loss = train.copy()
+
+        else:
+
+            if self.negative_ratio <= 0:
+                raise ValueError(
+                    "negative_ratio debe ser mayor que cero."
+                )
+
+            positivos = train.loc[
+                train["Positiva"].astype(int) == 1
+            ]
+
+            negativos = train.loc[
+                train["Positiva"].astype(int) == 0
+            ]
+
+            cantidad_negativos = min(
+                len(negativos),
+                round(
+                    len(positivos) * self.negative_ratio
+                )
+            )
+
+            if cantidad_negativos < 1:
+                raise ValueError(
+                    "La proporción seleccionada no permite "
+                    "muestrear ejemplos negativos."
+                )
+
+            # Selección reproducible de negativos
+            # entre los realmente observados.
+            negativos_muestra = negativos.sample(
+                n=cantidad_negativos,
+                replace=False,
+                random_state=self.seed
+            )
+
+            train_loss = pd.concat(
+                [
+                    positivos,
+                    negativos_muestra
+                ],
+                ignore_index=True
+            )
+
+            train_loss = train_loss.sample(
+                frac=1,
+                random_state=self.seed
+            ).reset_index(drop=True)
+
+        self.n_train_positivos = int(
+            train_loss["Positiva"].astype(int).sum()
+        )
+
+        self.n_train_negativos = (
+            len(train_loss) - self.n_train_positivos
+        )
+
+        print("\nMUESTRA UTILIZADA PARA LA PÉRDIDA")
+        print(
+            "Positivos observados:",
+            self.n_train_positivos
+        )
+        print(
+            "Negativos observados:",
+            self.n_train_negativos
+        )
+        print(
+            "Total:",
+            len(train_loss)
+        )
+
+        if self.negative_ratio is None:
+            print("Muestreo: desactivado")
+        else:
+            print(
+                "Relación solicitada:",
+                self.negative_ratio
+            )
+
+        return train_loss
+
+
+    # ========================================================
+    # 6. ENTRENAMIENTO CON EARLY STOPPING
     # ========================================================
 
     def fit(
@@ -255,20 +354,26 @@ class NeuralRecommendationSystem:
         np.random.seed(self.seed)
         torch.manual_seed(self.seed)
 
-        # Preparar datos y arquitectura.
+        # Construir modelo e historial con train completo.
         self.preparar(
             train,
             catalogo,
             usuarios
         )
 
+        # Aplicar muestreo exclusivamente sobre
+        # los ejemplos que intervienen en la pérdida.
+        train_loss = self.preparar_muestra_entrenamiento(
+            train
+        )
+
         entradas = self.codificar(
-            train["UserID"].tolist(),
-            train["ItemID"].tolist()
+            train_loss["UserID"].tolist(),
+            train_loss["ItemID"].tolist()
         )
 
         etiquetas = torch.tensor(
-            train["Positiva"]
+            train_loss["Positiva"]
             .astype(float)
             .to_numpy(),
             dtype=torch.float32
@@ -281,7 +386,6 @@ class NeuralRecommendationSystem:
 
         criterion = nn.BCEWithLogitsLoss()
 
-        # Variables para early stopping.
         tolerancia = 1e-4
 
         mejor_ndcg = float("-inf")
@@ -293,6 +397,9 @@ class NeuralRecommendationSystem:
         self.losses = []
         self.val_history = []
 
+        self.best_epoch = None
+        self.best_ndcg = None
+
         print("\n" + "=" * 60)
         print("ENTRENAMIENTO DEL RECOMENDADOR NEURONAL")
         print("=" * 60)
@@ -302,7 +409,7 @@ class NeuralRecommendationSystem:
         print("Paciencia:", self.patience)
 
         # ----------------------------------------------------
-        # Ciclo principal de entrenamiento
+        # Ciclo principal
         # ----------------------------------------------------
 
         for epoch in range(self.epochs):
@@ -349,11 +456,11 @@ class NeuralRecommendationSystem:
 
                 self.val_history.append(ndcg)
 
-                # Guardar la mejor configuración de pesos.
+                # Guardar los mejores pesos
+                # según la métrica de ranking.
                 if ndcg > mejor_ndcg + tolerancia:
 
                     mejor_ndcg = ndcg
-
                     mejor_epoca = epoch + 1
 
                     mejores_pesos = deepcopy(
@@ -403,7 +510,7 @@ class NeuralRecommendationSystem:
                 break
 
         # ----------------------------------------------------
-        # Recuperar los mejores pesos
+        # Recuperar mejores pesos
         # ----------------------------------------------------
 
         if mejores_pesos is not None:
@@ -416,8 +523,10 @@ class NeuralRecommendationSystem:
             self.best_ndcg = mejor_ndcg
 
             print("\nMEJOR MODELO RECUPERADO")
-            print("Mejor época:", self.best_epoch)
-
+            print(
+                "Mejor época:",
+                self.best_epoch
+            )
             print(
                 f"Mejor NDCG@{k}: "
                 f"{self.best_ndcg:.4f}"
@@ -429,7 +538,7 @@ class NeuralRecommendationSystem:
 
 
     # ========================================================
-    # 6. GENERACIÓN DE RECOMENDACIONES
+    # 7. RECOMENDACIONES
     # ========================================================
 
     def recommend(self, user_id, k=3):
@@ -448,6 +557,7 @@ class NeuralRecommendationSystem:
                 "la estrategia cold-start."
             )
 
+        # Historial original, antes del muestreo.
         vistos = self.historial.get(
             user_id,
             set()
@@ -478,7 +588,10 @@ class NeuralRecommendationSystem:
             ).tolist()
 
         ranking = list(
-            zip(candidatos, scores)
+            zip(
+                candidatos,
+                scores
+            )
         )
 
         ranking.sort(
@@ -489,15 +602,194 @@ class NeuralRecommendationSystem:
 
 
 # ============================================================
-# 7. EJECUCIÓN PRINCIPAL
+# 8. GRÁFICAS E HISTORIAL
+# ============================================================
+
+def guardar_resultados_entrenamiento(
+    sistema,
+    k,
+    negative_ratio=None
+):
+
+    FIGURES.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    PROCESSED.mkdir(
+        parents=True,
+        exist_ok=True
+    )
+
+    # Nombres diferentes para evitar sobrescribir
+    # los resultados del entrenamiento original.
+    if negative_ratio is None:
+        sufijo = "original"
+    else:
+        sufijo = (
+            f"negativos_{negative_ratio:g}"
+            .replace(".", "p")
+        )
+
+    epocas = list(
+        range(
+            1,
+            len(sistema.losses) + 1
+        )
+    )
+
+    historial = pd.DataFrame({
+        "Epoch": epocas,
+        "TrainLoss": sistema.losses,
+        "ValNDCG": sistema.val_history
+        if sistema.val_history
+        else [float("nan")] * len(epocas)
+    })
+
+    ruta_historial = (
+        PROCESSED
+        / f"neural_training_history_{sufijo}.csv"
+    )
+
+    historial.to_csv(
+        ruta_historial,
+        index=False
+    )
+
+    # --------------------------------------------------------
+    # Figura 1: Pérdida de entrenamiento
+    # --------------------------------------------------------
+
+    fig, ax = plt.subplots(
+        figsize=(9, 5)
+    )
+
+    ax.plot(
+        epocas,
+        sistema.losses,
+        linewidth=2,
+        label="Pérdida de entrenamiento"
+    )
+
+    if sistema.best_epoch is not None:
+
+        ax.axvline(
+            sistema.best_epoch,
+            color="green",
+            linestyle="--",
+            label=(
+                f"Mejor época: "
+                f"{sistema.best_epoch}"
+            )
+        )
+
+    ax.set_title(
+        "Pérdida de entrenamiento del recomendador neuronal"
+    )
+
+    ax.set_xlabel("Época")
+    ax.set_ylabel("Entropía cruzada binaria")
+
+    ax.legend()
+    ax.grid(alpha=0.25)
+
+    fig.tight_layout()
+
+    ruta_loss = (
+        FIGURES
+        / f"fig_m3_05_neural_train_loss_{sufijo}.png"
+    )
+
+    fig.savefig(
+        ruta_loss,
+        dpi=300,
+        bbox_inches="tight"
+    )
+
+    plt.close(fig)
+
+    # --------------------------------------------------------
+    # Figura 2: NDCG de validación
+    # --------------------------------------------------------
+
+    if sistema.val_history:
+
+        fig, ax = plt.subplots(
+            figsize=(9, 5)
+        )
+
+        ax.plot(
+            epocas,
+            sistema.val_history,
+            linewidth=2,
+            label=f"NDCG@{k} de validación"
+        )
+
+        if sistema.best_epoch is not None:
+
+            ax.axvline(
+                sistema.best_epoch,
+                color="green",
+                linestyle="--",
+                label=(
+                    f"Mejor época: "
+                    f"{sistema.best_epoch}"
+                )
+            )
+
+        ax.axvline(
+            len(epocas),
+            color="red",
+            linestyle=":",
+            label=(
+                f"Final del entrenamiento: "
+                f"{len(epocas)}"
+            )
+        )
+
+        ax.set_title(
+            "Evolución de NDCG en validación"
+        )
+
+        ax.set_xlabel("Época")
+        ax.set_ylabel(f"NDCG@{k}")
+
+        ax.legend()
+        ax.grid(alpha=0.25)
+
+        fig.tight_layout()
+
+        ruta_ndcg = (
+            FIGURES
+            / f"fig_m3_06_neural_val_ndcg_{sufijo}.png"
+        )
+
+        fig.savefig(
+            ruta_ndcg,
+            dpi=300,
+            bbox_inches="tight"
+        )
+
+        plt.close(fig)
+
+    print("\nHISTORIAL Y FIGURAS GUARDADOS")
+    print("Historial:", ruta_historial)
+    print("Figura pérdida:", ruta_loss)
+
+    if sistema.val_history:
+        print("Figura NDCG:", ruta_ndcg)
+
+
+# ============================================================
+# 9. FUNCIÓN PRINCIPAL
 # ============================================================
 
 def main():
 
     parser = argparse.ArgumentParser(
         description=(
-            "Entrenamiento del recomendador neuronal "
-            "con early stopping."
+            "Entrenamiento neuronal con early stopping "
+            "y muestreo opcional de negativos observados."
         )
     )
 
@@ -549,26 +841,52 @@ def main():
         default=15
     )
 
+    parser.add_argument(
+        "--negative-ratio",
+        type=float,
+        default=None,
+        help=(
+            "Cantidad de negativos observados por "
+            "cada positivo. Por defecto utiliza "
+            "todas las interacciones observadas."
+        )
+    )
+
     args = parser.parse_args()
 
-    # Validación de parámetros.
+    # --------------------------------------------------------
+    # Validación de argumentos
+    # --------------------------------------------------------
+
     if (
         args.embedding_dim < 1
         or args.hidden_dim < 2
         or args.epochs < 1
+        or args.patience < 1
         or args.k < 1
         or args.lr <= 0
-        or args.patience < 1
         or not 0 <= args.dropout < 1
     ):
 
         parser.error(
-            "Los parámetros de entrenamiento "
-            "contienen valores inválidos."
+            "Parámetros de entrenamiento inválidos."
+        )
+
+    if (
+        args.negative_ratio is not None
+        and (
+            not np.isfinite(args.negative_ratio)
+            or args.negative_ratio <= 0
+        )
+    ):
+
+        parser.error(
+            "--negative-ratio debe ser un número "
+            "finito mayor que cero."
         )
 
     # --------------------------------------------------------
-    # Cargar datos
+    # Carga de datos
     # --------------------------------------------------------
 
     train = pd.read_csv(
@@ -588,7 +906,7 @@ def main():
     )
 
     # --------------------------------------------------------
-    # Construir sistema
+    # Construcción del sistema
     # --------------------------------------------------------
 
     sistema = NeuralRecommendationSystem(
@@ -598,7 +916,8 @@ def main():
         lr=args.lr,
         epochs=args.epochs,
         seed=args.seed,
-        patience=args.patience
+        patience=args.patience,
+        negative_ratio=args.negative_ratio
     )
 
     # --------------------------------------------------------
@@ -614,7 +933,7 @@ def main():
     )
 
     # --------------------------------------------------------
-    # Contar parámetros entrenables
+    # Parámetros entrenables
     # --------------------------------------------------------
 
     parametros = sum(
@@ -624,7 +943,7 @@ def main():
     )
 
     # --------------------------------------------------------
-    # Evaluar el mejor modelo recuperado
+    # Evaluar en validación
     # --------------------------------------------------------
 
     metricas, detalle = evaluar_modelo(
@@ -643,8 +962,24 @@ def main():
         parametros
     )
 
-    print("Semilla:", args.seed)
-    print("K:", args.k)
+    print(
+        "Semilla:",
+        args.seed
+    )
+
+    print(
+        "K:",
+        args.k
+    )
+
+    print(
+        "Relación de negativos:",
+        (
+            "Todos los observados"
+            if args.negative_ratio is None
+            else args.negative_ratio
+        )
+    )
 
     print(
         "Mejor época:",
@@ -665,7 +1000,9 @@ def main():
                 f"{nombre}: {valor:.4f}"
             )
 
-    print("\nPrimeros cinco usuarios evaluados:")
+    print(
+        "\nPrimeros cinco usuarios evaluados:"
+    )
 
     print(
         detalle.head().to_string(
@@ -673,101 +1010,19 @@ def main():
         )
     )
 
+    # --------------------------------------------------------
+    # Guardar historial y figuras
+    # --------------------------------------------------------
 
-    # ========================================================
-    # GUARDAR HISTORIAL Y CURVAS DE ENTRENAMIENTO
-    # ========================================================
-
-    figures_dir = ROOT / "reports" / "figures" / "m3"
-    figures_dir.mkdir(parents=True, exist_ok=True)
-
-    epochs = list(range(1, len(sistema.losses) + 1))
-
-    historial = pd.DataFrame({
-        "Epoch": epochs,
-        "TrainLoss": sistema.losses,
-        "ValNDCG": sistema.val_history
-    })
-
-    historial.to_csv(
-        PROCESSED / "neural_training_history.csv",
-        index=False
+    guardar_resultados_entrenamiento(
+        sistema,
+        k=args.k,
+        negative_ratio=args.negative_ratio
     )
-
-    # Figura: pérdida de entrenamiento
-    fig, ax = plt.subplots(figsize=(9, 5))
-
-    ax.plot(
-        epochs,
-        sistema.losses,
-        linewidth=2,
-        label="Pérdida de entrenamiento"
-    )
-
-    ax.axvline(
-        sistema.best_epoch,
-        color="green",
-        linestyle="--",
-        label=f"Mejor época: {sistema.best_epoch}"
-    )
-
-    ax.set_title("Pérdida de entrenamiento del recomendador neuronal")
-    ax.set_xlabel("Época")
-    ax.set_ylabel("Entropía cruzada binaria")
-    ax.legend()
-    ax.grid(alpha=0.25)
-
-    fig.tight_layout()
-    fig.savefig(
-        figures_dir / "fig_m3_05_neural_train_loss.png",
-        dpi=300,
-        bbox_inches="tight"
-    )
-    plt.close(fig)
-
-    # Figura: NDCG de validación
-    fig, ax = plt.subplots(figsize=(9, 5))
-
-    ax.plot(
-        epochs,
-        sistema.val_history,
-        linewidth=2,
-        label=f"NDCG@{args.k} de validación"
-    )
-
-    ax.axvline(
-        sistema.best_epoch,
-        color="green",
-        linestyle="--",
-        label=f"Mejor época: {sistema.best_epoch}"
-    )
-
-    ax.axvline(
-        len(epochs),
-        color="red",
-        linestyle=":",
-        label=f"Parada temprana: {len(epochs)}"
-    )
-
-    ax.set_title("Evolución de NDCG en validación")
-    ax.set_xlabel("Época")
-    ax.set_ylabel(f"NDCG@{args.k}")
-    ax.legend()
-    ax.grid(alpha=0.25)
-
-    fig.tight_layout()
-    fig.savefig(
-        figures_dir / "fig_m3_06_neural_val_ndcg.png",
-        dpi=300,
-        bbox_inches="tight"
-    )
-    plt.close(fig)
-
-    print("\nHISTORIAL Y FIGURAS GUARDADOS CORRECTAMENTE")
 
 
 # ============================================================
-# 8. INICIO DEL PROGRAMA
+# 10. EJECUCIÓN
 # ============================================================
 
 if __name__ == "__main__":
