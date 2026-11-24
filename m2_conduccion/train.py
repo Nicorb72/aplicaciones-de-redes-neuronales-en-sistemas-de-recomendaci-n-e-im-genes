@@ -59,16 +59,18 @@ def build(family, parameters, pretrained=False, weights_dir=None):
 
 
 @torch.inference_mode()
-def infer(model, loader, device):
+def infer(model, loader, device, *, prefix_features=False):
     model.eval()
+    forward = model.forward_from_prefix if prefix_features else model
     predictions, labels = [], []
     for images, target in loader:
-        predictions.append(model(preprocess(images.to(device))).cpu())
+        inputs = images.to(device)
+        predictions.append(forward(inputs if prefix_features else preprocess(inputs)).cpu())
         labels.append(target)
     return torch.cat(predictions), torch.cat(labels).numpy()
 
 
-def fit(model, train, val, parameters, config, device):
+def fit(model, train, val, parameters, config, device, *, prefix_features=False):
     model.to(device=device, memory_format=torch.channels_last)
     extractor = model.backbone.parameters() if isinstance(model, TransferCNN) else []
     backbone = [p for p in extractor if p.requires_grad]
@@ -81,6 +83,7 @@ def fit(model, train, val, parameters, config, device):
     options = {"momentum": 0.9} if parameters["optimizer"] == "sgd" else {}
     optimizer = optimizer_cls(groups, lr=parameters["lr"], weight_decay=parameters["decay"], **options)
     augment = augmentation(parameters["augmentation"])
+    forward = model.forward_from_prefix if prefix_features else model
     criterion = nn.CrossEntropyLoss()
     shuffled = DataLoader(train.dataset, batch_size=config["batch_size"], shuffle=True,
                           generator=torch.Generator().manual_seed(config["seed"]))
@@ -92,11 +95,12 @@ def fit(model, train, val, parameters, config, device):
             images, labels = images.to(device), labels.to(device)
             optimizer.zero_grad(set_to_none=True)
             # v2 comparte los parámetros aleatorios dentro de cada lote.
-            loss = criterion(model(preprocess(augment(images))), labels)
+            inputs = images if prefix_features else preprocess(augment(images))
+            loss = criterion(forward(inputs), labels)
             loss.backward()
             optimizer.step()
             loss_sum += loss.item() * len(labels)
-        logits, y = infer(model, val, device)
+        logits, y = infer(model, val, device, prefix_features=prefix_features)
         score = f1_score(y, logits.argmax(dim=1), average="macro")
         history.append({"epoch": epoch, "loss": loss_sum / len(shuffled.dataset), "val_f1": score})
         print(f"Época {epoch}: F1 macro validación {score:.4f}", flush=True)

@@ -1,0 +1,4 @@
+family,configurations,seconds,device,seed,epochs
+logreg,3,8.84663550008554,cuda,2026,2
+scratch,4,36.96117979998235,cuda,2026,2
+transfer,4,44.17435919994023,cuda,2026,2

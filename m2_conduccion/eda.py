@@ -71,9 +71,13 @@ def describe_cameras(frame):
         "images").to_csv(TABLES / "m2_camaras.csv")
 
 
-def describe(frame, cache):
-    distribution = pd.crosstab(frame["label"], frame["split"]).reindex(
+def distribution_counts(frame):
+    return pd.crosstab(frame["label"], frame["split"]).reindex(
         index=range(len(CLASSES)), columns=["train", "val", "test"], fill_value=0)
+
+
+def describe(frame, cache):
+    distribution = distribution_counts(frame)
     distribution.index = CLASSES
     distribution.assign(total=distribution.sum(axis=1)).to_csv(TABLES / "m2_distribucion.csv")
     frame.assign(label=frame["label"].map(dict(enumerate(CLASSES)))).groupby(
@@ -81,6 +85,11 @@ def describe(frame, cache):
     describe_cameras(frame)
     frame.assign(label=frame["label"].map(dict(enumerate(CLASSES)))).groupby("label")[
         ["luminance", "contrast"]].quantile([0.1, 0.5, 0.9]).to_csv(TABLES / "m2_iluminacion.csv")
+    plot_inventory(frame, cache)
+
+
+def plot_inventory(frame, cache):
+    distribution = distribution_counts(frame)
     ax = distribution.set_axis(DISPLAY).plot.bar(stacked=True, rot=0, figsize=(8, 4),
                                                color=["#29557a", "#2b8d7d", "#e6a34e"])
     ax.set(ylabel="Imágenes", xlabel="Clase")

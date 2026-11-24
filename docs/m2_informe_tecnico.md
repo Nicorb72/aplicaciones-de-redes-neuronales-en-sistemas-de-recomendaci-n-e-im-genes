@@ -4,13 +4,15 @@ Una cámara en cabina puede ayudar a detectar distracciones visuales y manuales 
 
 ## Caso de uso y presupuesto de operación
 
-El destinatario inmediato es el conductor. Cuando el vehículo está en movimiento y la evidencia de distracción persiste, se emite un aviso sonoro breve para que retome la mirada al camino y libere el teléfono al hacerlo de forma segura. Un evento repetido puede quedar disponible para revisión de seguridad vial al finalizar el turno. El prototipo trabaja por imagen. Para el piloto se propone iniciar a 5 cuadros por segundo, requerir 3 de los últimos 5 cuadros positivos en una ventana de un segundo y aplicar un período de silencio posterior de 20 segundos. Estas cifras son hipótesis para validar con video.
+El destinatario inmediato es el conductor. Cuando el vehículo está en movimiento y la evidencia de distracción persiste, se emite un aviso sonoro breve para que retome la mirada al camino y libere el teléfono al hacerlo de forma segura. Un evento repetido puede quedar disponible para revisión de seguridad vial al finalizar el turno. La aplicación web clasifica imágenes individuales. El modo de video grabado toma 5 cuadros por segundo, requiere 3 positivos en una ventana de 5 cuadros y aplica un período de silencio posterior de 20 segundos. El sonido se puede habilitar al ejecutar la prueba. La validación en carretera requiere sincronizar cuadros y velocidad del vehículo y evaluar la regla con secuencias anotadas.
 
 Se propone una cámara fija con encuadre de cara, manos y volante, alimentación vehicular y procesamiento local en un equipo de borde. El objetivo inicial es p95 inferior a 200 ms por cuadro para captura, decodificación e inferencia y aviso dentro de 1,2 s desde el inicio de una distracción persistente. Se medirían latencia, consumo térmico, oclusiones, reflejos y pérdida de cámara en el equipo final. Una cámara nocturna o infrarroja exige muestras propias. Para el piloto, enviar a supervisión conteos y marcas de tiempo por defecto y restringir el acceso y la retención de cualquier clip de revisión.
 
+En un video de prueba de 24 s construido con imágenes repetidas, se evaluaron 120 cuadros. Una activación aislada quedó sin aviso. La secuencia persistente activó el primer aviso a los 1,4 s y el segundo a los 21,4 s. La medición del archivo incluye decodificación, inferencia y decisión temporal. La latencia desde la cámara y la validez de la política se evaluarán con datos de un vehículo real. [Prueba del flujo de video](../reports/tables/m2_video_smoke.json)
+
 ## Datos y construcción
 
-Afridi y colaboradores describen fotos tomadas en Ashulia, Dhaka, en carros particulares y buses públicos, con un iPhone 11 y un Moto Edge 50 Fusion. Reportan 178 conductores de 20 a 50 años, 30 días de captura, vías urbanas y carreteras, varios ángulos y condiciones diurnas, de poca luz y nocturnas. Clasificaron manualmente las fotos en cinco conductas. La ficha de Mendeley fecha la captura en octubre de 2024. [Artículo, secciones 2 y 3](https://pmc.ncbi.nlm.nih.gov/articles/PMC12019831/) · [Mendeley Data, versión 1](https://data.mendeley.com/datasets/mzb4b6dff3/1)
+Afridi y colaboradores describen fotos tomadas en Ashulia, Dhaka, en carros particulares y buses públicos, con un iPhone 11 y un Moto Edge 50 Fusion. Reportan 178 conductores de 20 a 50 años, 30 días de captura, vías urbanas y carreteras, varios ángulos y condiciones diurnas, de poca luz y nocturnas. Clasificaron manualmente las fotos en cinco conductas. La ficha de Mendeley fecha la captura en octubre de 2024. [Artículo, DOI 10.1016/j.dib.2025.111529](https://doi.org/10.1016/j.dib.2025.111529) · [Mendeley Data, DOI 10.17632/mzb4b6dff3.1](https://doi.org/10.17632/mzb4b6dff3.1)
 
 | Clase | Imágenes por carpeta del ZIP | Proporción | Resolución declarada | Imágenes de 640 × 480 medidas |
 | --- | ---: | ---: | --- | ---: |
@@ -57,6 +59,8 @@ La revisión posterior al reparto dio **0 coincidencias detectadas entre partici
 
 Con 120 fotos del ZIP y variantes de origen conocido, la regla recuperó 120 espejos, 120 reducciones de brillo al 70 %, 115 rotaciones de 11° y 118 recortes centrados que conservaban el 85 % de cada eje. Recuperó 0 de 120 recortes asimétricos que conservaban el 80 % desde la esquina superior izquierda. Ese ensayo mide el alcance de la comprobación bajo transformaciones controladas. [Sensibilidad de las huellas](../reports/tables/m2_sensibilidad_huellas.csv)
 
+La auditoría complementaria compara 48 recortes descentrados por imagen, obtenidos de seis escalas entre 80 % y 90 % y ocho anclajes en las esquinas o cerca de ellas. Un par requiere distancia de Hamming de hasta 7 y correlación de luminancia de al menos 0,975 después de alinear el recorte. Entre particiones se detectaron cero pares bajo ese criterio. En los controles positivos se recuperaron 120 de 120 recortes de esquina al 80 %, 119 de 120 al 83 % y 120 de 120 desplazados al 83 %. El resultado se limita al rango de geometrías probadas y mantiene el reparto por grupos. [Pares entre particiones](../reports/tables/m2_recortes_entre_particiones.csv) · [Controles de recorte](../reports/tables/m2_sensibilidad_recortes.csv)
+
 ![Distribución de archivos legibles por clase y partición](../reports/figures/m2/distribucion.png)
 
 *Figura 2. Imágenes legibles por clase y partición.*
@@ -92,6 +96,27 @@ La referencia seleccionó (C=0,1). La mejor CNN propia usó tres bloques con 16 
 P indica precisión y S sensibilidad. La ResNet-18 predijo «otros» en 297 imágenes, de las cuales 128 pertenecían a la clase. Los mayores flujos de error fueron segura → otros y giro → otros (56 cada uno) y hablar → otros (45). Entre las 73 fotos de hablar, 11 pasaron a escribir. La confusión dominante con «otros» supera la confusión segura → giro (8 casos) que se planteó inicialmente. [Métricas por clase](../reports/tables/m2_metricas_clase.csv) · [Predicciones de prueba](../reports/tables/m2_predicciones.csv)
 
 En el grupo de 640 × 480 px, la exactitud fue 68,8 % y el F1 macro 0,648 (276 fotos de prueba). En los demás formatos fueron 28,8 % y 0,167 (260 fotos). El formato sirve aquí como aproximación a diferencias de encuadre y procedencia. La composición de clases también cambia entre los dos grupos. La medición local de inferencia con seis hilos de CPU dio 9,1 ms de mediana y 9,8 ms de p95 sobre el tensor ya redimensionado. La latencia vehicular se mediría desde la captura hasta la alerta. [Latencia local](../reports/tables/m2_latencia.csv)
+
+### Estabilidad y costo de cómputo
+
+Se reentrenó cada configuración final con 30 semillas consecutivas, de 2026 a 2055, con las mismas particiones y dos épocas por corrida. En cada corrida se conservó la época de mayor F1 macro en validación y se evaluó en prueba. Para ResNet-18 se precalcularon las activaciones hasta la tercera etapa residual, `layer3`, porque la configuración final usa entradas sin aumento y congela esas capas. La prueba numérica verifica que ejecutar la etapa final y la cabeza sobre esas activaciones reproduce los logits del modelo completo.
+
+| Red y métrica de prueba | Media | Desv. estándar | Mejor | Peor |
+| --- | ---: | ---: | ---: | ---: |
+| CNN propia, exactitud | 0,297 | 0,039 | 0,364 | 0,228 |
+| CNN propia, F1 macro | 0,264 | 0,043 | 0,346 | 0,183 |
+| ResNet-18 ajustada, exactitud | 0,429 | 0,039 | 0,498 | 0,354 |
+| ResNet-18 ajustada, F1 macro | 0,376 | 0,035 | 0,443 | 0,309 |
+
+El F1 macro medio de ResNet-18 supera en 0,061 el 0,315 de la regresión logística de referencia. La CNN propia queda 0,050 por debajo de la referencia en promedio. Se comparan las medias de 30 entrenamientos con el valor de la logística, cuyo ajuste usa características congeladas y un optimizador determinista sobre la partición fija. La ResNet-18 que se publicó para la demo es la de la comparación original en CPU, elegida por validación. Las 60 corridas se ejecutaron en una RTX 4060 con PyTorch 2.6 y CUDA 12.4. La retropropagación del pooling adaptativo de la CNN en CUDA puede producir pequeñas variaciones numéricas en una repetición con la misma semilla. [Métricas por semilla y clase](../reports/tables/m2_semillas.csv) · [Estadísticos completos](../reports/tables/m2_resumen_semillas.csv)
+
+La CNN tiene **24.981** parámetros entrenables, la regresión logística **2.565** y ResNet-18 ajusta **8.396.293** de **11.179.077**. Las 30 corridas de la CNN tomaron 221,7 s. Las de ResNet-18 tomaron 140,5 s, con 3,0 s para precalcular activaciones. Los tiempos de esta etapa incluyen la evaluación de cada semilla. [Parámetros](../reports/tables/m2_parametros.csv) · [Tiempo de estabilidad](../reports/tables/m2_tiempos_estabilidad.csv)
+
+La repetición de la búsqueda en la RTX 4060 tomó **90,0 s** en total. La extracción de características y los tres ajustes de la regresión logística tomaron 8,8 s, los cuatro ensayos de la CNN tomaron 37,0 s y los cuatro de ResNet-18 tomaron 44,2 s. La regresión ajusta el clasificador con scikit-learn en CPU tras extraer características en GPU. Esta repetición mide el presupuesto del procedimiento y conserva la selección original empleada en la demo. [Tiempo por familia](../reports/tables/m2_tiempos_busqueda.csv)
+
+![Distribución de F1 macro en prueba de las redes por semilla](../reports/figures/m2/estabilidad_semillas.png)
+
+*El diagrama compara las 30 corridas de cada red con el F1 macro de la regresión logística.*
 
 ![Matriz de confusión en prueba para ResNet-18 ajustada](../reports/figures/m2/confusion.png)
 
@@ -154,6 +179,8 @@ El umbral seleccionado fue **0,40**, con costo 398,9 por 1.000 imágenes de vali
 | 0,90 | 0,0 | 570,9 | 2.854,5 |
 
 El umbral 0,50 tuvo menor costo observado en prueba. La elección de 0,40 se fijó con validación antes de abrir la prueba. Estos valores dependen de la prevalencia y del encuadre de los datos. [Barrido completo de validación](../reports/tables/m2_alertas_val.csv) · [Barrido completo de prueba](../reports/tables/m2_alertas_test.csv)
+
+También se evaluó una política que limita a 20 % la proporción de falsas alarmas **entre imágenes sin distracción** en validación. Dentro de la misma cuadrícula, el menor costo admisible se obtuvo a 0,75. En prueba, ese umbral produjo 29 falsas alarmas sobre 230 imágenes sin distracción (12,6 %) y omitió 215 de 306 distracciones (70,3 %). Esto equivale a 54,1 falsas alarmas y 401,1 omisiones por 1.000 imágenes. A 0,40, las 73 imágenes de «hablar» activaron la alerta binaria y 13 recibieron la etiqueta multiclase correcta. El umbral modifica la decisión binaria y no cambia la clasificación multiclase. La comparación muestra que la baja capacidad de discriminación persiste con límites más estrictos de falsas alarmas. [Políticas comparadas](../reports/tables/m2_politicas_validacion.csv)
 
 ![Falsas alarmas y distracciones omitidas por umbral en prueba](../reports/figures/m2/alertas.png)
 

@@ -1,0 +1,20 @@
+{
+  "cuadros_evaluados": 120,
+  "alertas": 2,
+  "umbral": 0.4,
+  "decision_archivo_p95_ms": 103.58132503461093,
+  "source": "fixture_24s_imagenes_repetidas",
+  "events": [
+    {
+      "alerta": true,
+      "segundo": 1.4,
+      "riesgo": 0.8871580958366394
+    },
+    {
+      "alerta": true,
+      "segundo": 21.4,
+      "riesgo": 0.8871580958366394
+    }
+  ],
+  "threads": 4
+}

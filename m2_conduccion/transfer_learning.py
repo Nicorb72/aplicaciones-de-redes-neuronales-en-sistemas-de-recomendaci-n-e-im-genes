@@ -29,10 +29,16 @@ class TransferCNN(nn.Module):
         self.backbone.eval()
         return self
 
-    def spatial(self, images):
+    def through_layer3(self, images):
         model = self.backbone
         x = model.maxpool(model.relu(model.bn1(model.conv1(images))))
-        return model.layer4(model.layer3(model.layer2(model.layer1(x))))
+        return model.layer3(model.layer2(model.layer1(x)))
+
+    def spatial(self, images):
+        return self.backbone.layer4(self.through_layer3(images))
+
+    def forward_from_prefix(self, features):
+        return self.logits(self.backbone.layer4(features))
 
     def embeddings(self, features):
         return features.mean(dim=(2, 3))

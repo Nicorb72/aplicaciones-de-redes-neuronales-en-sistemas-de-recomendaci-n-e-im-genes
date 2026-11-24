@@ -119,3 +119,29 @@ def plot_results(cm, test_alert, threshold):
     ax.set(xlabel="Umbral de alerta", ylabel="Errores por 1.000 imágenes de prueba")
     ax.legend()
     save_figure(fig, "alertas")
+
+
+def regenerate_figures(frame, cache_path, seed):
+    """Reconstruye figuras a partir de los resultados y el checkpoint publicados."""
+    from m2_conduccion.eda import PROCESSED, plot_inventory, show_matches
+    from m2_conduccion.predict import load_checkpoint
+    from m2_conduccion.stability import plot_stability
+
+    model, metadata = load_checkpoint()
+    cache = np.load(cache_path, mmap_mode="r")
+    plot_inventory(frame, cache)
+    show_matches(frame, cache, pd.read_csv(PROCESSED / "coincidencias.csv"), seed)
+    predictions = pd.read_csv(TABLES / "m2_predicciones.csv")
+    test = frame[frame["split"] == "test"].copy()
+    if not np.array_equal(test["image"], predictions["image"]):
+        raise ValueError("Las predicciones guardadas corresponden a otra partición.")
+    test["position"] = predictions["position"].to_numpy(dtype=int)
+    test["correct"] = predictions["correct"].to_numpy(dtype=bool)
+    probabilities = predictions[[f"p_{label}" for label in CLASSES]].to_numpy()
+    predicted = predictions["prediction"].to_numpy()
+    for correct in (True, False):
+        examples(test, cache, probabilities, predicted, correct, seed, model, torch.device("cpu"))
+    matrix = pd.read_csv(TABLES / f"m2_confusion_{metadata['family']}.csv", index_col=0).to_numpy()
+    alert_table = pd.read_csv(TABLES / "m2_alertas_test.csv")
+    plot_results(matrix, alert_table, metadata["threshold"])
+    plot_stability(pd.read_csv(TABLES / "m2_semillas.csv"))

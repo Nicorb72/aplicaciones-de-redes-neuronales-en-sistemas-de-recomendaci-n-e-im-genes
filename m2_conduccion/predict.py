@@ -25,8 +25,11 @@ def _load(path, modified):
 def load_checkpoint(path=None):
     path = Path(path) if path is not None else CHECKPOINT
     if not path.is_file():
-        raise FileNotFoundError(f"Falta {path}. Ejecuta python -m m2_conduccion.run --mode train.")
-    return _load(path.resolve(), path.stat().st_mtime_ns)
+        raise FileNotFoundError(f"Falta {path}. Descarga los artefactos con git lfs pull.")
+    state = path.stat()
+    if state.st_size < 512 and path.read_bytes().startswith(b"version https://git-lfs.github.com/spec/"):
+        raise FileNotFoundError(f"{path.name} es un puntero de Git LFS. Ejecuta git lfs pull.")
+    return _load(path.resolve(), state.st_mtime_ns)
 
 
 def classify(image, threshold=None, *, with_gradcam=True, checkpoint=None):

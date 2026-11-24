@@ -48,3 +48,34 @@ def threshold_table(logits, labels, temp, config, chosen=None):
 
 def choose_threshold(table):
     return float(table.sort_values(["cost_per_1000", "fn", "fp", "threshold"]).iloc[0]["threshold"])
+
+
+def review_policies(frame, config, tables_path):
+    """Compara el costo y un límite de falsas alarmas fijado en validación."""
+    limit = config["max_false_alarm_rate"]
+    if not 0 <= limit <= 1:
+        raise ValueError("max_false_alarm_rate debe estar entre cero y uno.")
+    risk = risk_indices(config["class_grouping"])
+    tables = {split: pd.read_csv(tables_path / f"m2_alertas_{split}.csv")
+              for split in ("val", "test")}
+    counts = {}
+    for split in tables:
+        labels = frame.loc[frame["split"] == split, "label"]
+        positives = int(labels.isin(risk).sum())
+        counts[split] = positives, len(labels) - positives
+    val = tables["val"]
+    val_negative = counts["val"][1]
+    allowed = val[val.fp <= limit * val_negative]
+    thresholds = {"costo_relativo": float(val.loc[val["selected"], "threshold"].item())}
+    if not allowed.empty:
+        thresholds["tope_falsas_alarmas"] = choose_threshold(allowed)
+    rows = []
+    for name, threshold in thresholds.items():
+        for split, table in tables.items():
+            positive, negative = counts[split]
+            record = table[np.isclose(table.threshold, threshold)].iloc[0].drop("selected").to_dict()
+            rows.append({"policy": name, "split": split, **record,
+                         "sensitivity": 1 - record["fn"] / positive,
+                         "false_alarm_rate": record["fp"] / negative,
+                         "alert_rate": (positive - record["fn"] + record["fp"]) / (positive + negative)})
+    pd.DataFrame(rows).to_csv(tables_path / "m2_politicas_validacion.csv", index=False)

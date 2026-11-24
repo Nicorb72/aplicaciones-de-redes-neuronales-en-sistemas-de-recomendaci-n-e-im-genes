@@ -1,0 +1,4 @@
+family,trainable,total
+logreg,2565,11179077
+scratch,24981,24981
+transfer,8396293,11179077

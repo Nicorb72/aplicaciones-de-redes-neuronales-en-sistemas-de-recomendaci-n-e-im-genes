@@ -4,6 +4,12 @@ from PIL import Image, ImageEnhance, ImageOps
 from scipy.fft import dctn
 
 
+def perceptual_hash(pixels):
+    coefficients = dctn(pixels, norm="ortho")[:8, :8].ravel()[1:]
+    bits = np.packbits(np.r_[False, coefficients > np.median(coefficients)])
+    return int.from_bytes(bits.tobytes(), "big")
+
+
 def fingerprints(image):
     gray = image.convert("L")
     views = [gray, ImageOps.mirror(gray)]
@@ -16,9 +22,7 @@ def fingerprints(image):
     values = []
     for view in views:
         pixels = np.asarray(view.resize((32, 32), Image.Resampling.LANCZOS), dtype=float)
-        coefficients = dctn(pixels, norm="ortho")[:8, :8].ravel()[1:]
-        bits = np.packbits(np.r_[False, coefficients > np.median(coefficients)])
-        values.append(int.from_bytes(bits.tobytes(), "big"))
+        values.append(perceptual_hash(pixels))
     return values
 
 

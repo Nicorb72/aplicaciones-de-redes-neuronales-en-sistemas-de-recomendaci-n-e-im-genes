@@ -1,14 +1,23 @@
 seed: 2026
 split: [0.70, 0.15, 0.15]
 hash_distance: 7
+crop_hash_distance: 7
+crop_min_correlation: 0.975
 image_size: 112
 batch_size: 64
 epochs: 2
 search_trials: 4
+stability_runs: 30
 threads: 6
 false_alarm_cost: 1
 miss_cost: 5
 default_threshold: 0.1666666667
+max_false_alarm_rate: 0.20
+temporal:
+  fps: 5
+  window: 5
+  positives: 3
+  cooldown: 20.0
 class_grouping:
   sin_alerta: [segura, giro]
   con_alerta: [escribir, hablar, otros]
